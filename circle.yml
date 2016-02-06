@@ -1,0 +1,32 @@
+machine:
+  pre:
+    - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.1-circleci'
+    - sudo chmod 0755 /usr/bin/docker
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - docker info
+  override:
+    - |
+      if [ "$CIRCLE_BRANCH" = "master" ]; then
+        make SUFFIX=
+      else
+        make
+      fi
+  post:
+    - docker images
+
+test:
+  override:
+    - /bin/true
+
+deployment:
+  hub_branch:
+    branch: master
+    owner: prometheus
+    commands:
+      - make tag SUFFIX=
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+      - make push
