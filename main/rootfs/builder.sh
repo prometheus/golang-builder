@@ -84,20 +84,24 @@ do
   goos=${goarch%%/*}
   arch=${goarch##*/}
 
+  echo "# ${goos}-${arch}"
+  prefix=".build/${goos}-${arch}"
+  mkdir -p ${prefix}
+
   if [ "${goos}" = "windows" ]; then
     if [ "${arch}" = "386" ]; then
-      CC="i686-w64-mingw32-gcc" CXX="i686-w64-mingw32-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make build
+      CC="i686-w64-mingw32-gcc" CXX="i686-w64-mingw32-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
     else
-      CC="x86_64-w64-mingw32-gcc" CXX="x86_64-w64-mingw32-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make build
+      CC="x86_64-w64-mingw32-gcc" CXX="x86_64-w64-mingw32-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
     fi
   elif [ "${goos}" = "darwin" ]; then
     if [ "${arch}" = "386" ]; then
-      CC="o32-clang" CXX="o32-clang++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make build
+      CC="o32-clang" CXX="o32-clang++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
     else
-      CC="o64-clang" CXX="o64-clang++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make build
+      CC="o64-clang" CXX="o64-clang++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
     fi
   else
-    CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make build
+    CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
   fi
 done
 

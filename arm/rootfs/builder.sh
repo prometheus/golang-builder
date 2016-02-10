@@ -88,14 +88,22 @@ do
     goarms=(5 6 7)
     for goarm in "${goarms[@]}"
     do
+      echo "# ${goos}-${arch}v${goarm}"
+      prefix=".build/${goos}-${arch}v${goarm}"
+      mkdir -p ${prefix}
+
       if [ "${goarm}" = 7 ]; then
-        CC="arm-linux-gnueabihf-gcc" CXX="arm-linux-gnueabihf-g++" CGO_ENABLED=1 GOARM=${goarm} GOOS=${goos} GOARCH=${arch} make build
+        CC="arm-linux-gnueabihf-gcc" CXX="arm-linux-gnueabihf-g++" CGO_ENABLED=1 GOARM=${goarm} GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
       else
-        CC="arm-linux-gnueabi-gcc" CXX="arm-linux-gnueabi-g++" CGO_ENABLED=1 GOARM=${goarm} GOOS=${goos} GOARCH=${arch} make build
+        CC="arm-linux-gnueabi-gcc" CXX="arm-linux-gnueabi-g++" CGO_ENABLED=1 GOARM=${goarm} GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
       fi
     done
   elif [ "${arch}" = "arm64" ]; then
-    CC="aarch64-linux-gnu-gcc" CXX="aarch64-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make build
+    echo "# ${goos}-${arch}"
+    prefix=".build/${goos}-${arch}"
+    mkdir -p ${prefix}
+
+    CC="aarch64-linux-gnu-gcc" CXX="aarch64-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
   else
     echo 'Error: This is arm/arm64 builder only.'
   fi

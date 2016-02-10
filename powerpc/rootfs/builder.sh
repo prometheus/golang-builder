@@ -84,10 +84,14 @@ do
   goos=${goarch%%/*}
   arch=${goarch##*/}
 
+  echo "# ${goos}-${arch}"
+  prefix=".build/${goos}-${arch}"
+  mkdir -p ${prefix}
+
   if [ "${arch}" = "ppc64" ]; then
-    CC="powerpc-linux-gnu-gcc" CXX="powerpc-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make build
+    CC="powerpc-linux-gnu-gcc" CXX="powerpc-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
   elif [ "${arch}" = "ppc64le" ]; then
-    CC="powerpc64le-linux-gnu-gcc" CXX="powerpc64le-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make build
+    CC="powerpc64le-linux-gnu-gcc" CXX="powerpc64le-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
   else
     echo 'Error: This is mips/mipsel builder only.'
   fi
