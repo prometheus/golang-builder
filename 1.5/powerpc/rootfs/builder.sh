@@ -13,15 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -eo pipefail
 
 # This is a Makefile based building processus
 [ ! -e "./Makefile" ] && echo "Error: A Makefile with 'build' and 'test' targets must be present into the root of your source files" && exit 1
 
 usage() {
   base="$(basename "$0")"
-  cat <<EOUSAGE
-Usage: ${base} [args]
+cat <<EOUSAGE
+  Usage: ${base} [args]
   -i,--import-path arg  : Go import path of the project
   -p,--platforms arg    : List of platforms (GOOS/GOARCH) to build separated by a space
   -T,--tests            : Go run tests then exit
@@ -78,7 +78,7 @@ fi
 
 # Building binaries for the specified platforms
 # The `build` Makefile target is required
-goarchs=(${goarchs[@]:-linux\/amd64})
+goarchs=(${goarchs[@]:-linux\/ppc64})
 for goarch in "${goarchs[@]}"
 do
   goos=${goarch%%/*}
@@ -86,22 +86,14 @@ do
 
   echo "# ${goos}-${arch}"
   prefix=".build/${goos}-${arch}"
-  mkdir -p ${prefix}
+  mkdir -p "${prefix}"
 
-  if [ "${goos}" = "windows" ]; then
-    if [ "${arch}" = "386" ]; then
-      CC="i686-w64-mingw32-gcc" CXX="i686-w64-mingw32-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
-    else
-      CC="x86_64-w64-mingw32-gcc" CXX="x86_64-w64-mingw32-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
-    fi
-  elif [ "${goos}" = "darwin" ]; then
-    if [ "${arch}" = "386" ]; then
-      CC="o32-clang" CXX="o32-clang++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
-    else
-      CC="o64-clang" CXX="o64-clang++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
-    fi
+  if [ "${arch}" = "ppc64" ]; then
+    CC="powerpc-linux-gnu-gcc" CXX="powerpc-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
+  elif [ "${arch}" = "ppc64le" ]; then
+    CC="powerpc64le-linux-gnu-gcc" CXX="powerpc64le-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
   else
-    CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
+    echo 'Error: This is mips/mipsel builder only.'
   fi
 done
 

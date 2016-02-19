@@ -13,19 +13,23 @@
 
 REPOSITORY := prom
 NAME       := golang-builder
-BRANCH     := $(shell git rev-parse --abbrev-ref HEAD)
-SUFFIX     ?= -$(BRANCH)
+LATEST     ?= 1.5
+VERSIONS   ?= 1.5 1.6
+VARIANTS   ?= main arm powerpc mips
 
-all:
-	cd main; make
-	cd arm; make
-	cd powerpc; make
-	cd mips; make
+all: build
+
+build:
+	@./build.sh "$(VERSIONS)" "$(VARIANTS)"
 
 tag:
-	docker tag -f "$(REPOSITORY)/$(NAME):main$(SUFFIX)" "$(REPOSITORY)/$(NAME):latest"
+	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-main" "$(REPOSITORY)/$(NAME):latest"
+	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-main" "$(REPOSITORY)/$(NAME):main"
+	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-arm" "$(REPOSITORY)/$(NAME):arm"
+	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-powerpc" "$(REPOSITORY)/$(NAME):powerpc"
+	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-mips" "$(REPOSITORY)/$(NAME):mips"
 
 push:
 	docker push "$(REPOSITORY)/$(NAME)"
 
-.PHONY: all tag
+.PHONY: all build tag push

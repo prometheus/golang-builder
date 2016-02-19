@@ -1,4 +1,4 @@
-FROM        golang:1.5.3
+FROM        golang:1.6.0
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 VOLUME  /app
@@ -12,10 +12,6 @@ RUN \
         clang llvm-dev libxml2-dev uuid-dev libssl-dev patch xz-utils bzip2 cpio \
         gcc-multilib \
     && rm -rf /var/lib/apt/lists/*
-
-RUN \
-    wget -nv https://get.docker.com/builds/Linux/x86_64/docker-1.9.1 -O /usr/bin/docker \
-    && chmod +x /usr/bin/docker
 
 ARG OSXCROSS_SDK_URL
 ENV OSXCROSS_PATH=/usr/osxcross \
