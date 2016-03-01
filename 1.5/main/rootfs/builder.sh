@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -eo pipefail
 
 # This is a Makefile based building processus
 [ ! -e "./Makefile" ] && echo "Error: A Makefile with 'build' and 'test' targets must be present into the root of your source files" && exit 1
@@ -78,7 +78,7 @@ fi
 
 # Building binaries for the specified platforms
 # The `build` Makefile target is required
-goarchs=(${goarchs[@]:-linux\/mips})
+goarchs=(${goarchs[@]:-linux\/amd64})
 for goarch in "${goarchs[@]}"
 do
   goos=${goarch%%/*}
@@ -86,14 +86,22 @@ do
 
   echo "# ${goos}-${arch}"
   prefix=".build/${goos}-${arch}"
-  mkdir -p ${prefix}
+  mkdir -p "${prefix}"
 
-  if [ "${arch}" = "mips" ]; then
-    CC="mips-linux-gnu-gcc" CXX="mips-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
-  elif [ "${arch}" = "mipsel" ]; then
-    CC="mipsel-linux-gnu-gcc" CXX="mipsel-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
+  if [ "${goos}" = "windows" ]; then
+    if [ "${arch}" = "386" ]; then
+      CC="i686-w64-mingw32-gcc" CXX="i686-w64-mingw32-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
+    else
+      CC="x86_64-w64-mingw32-gcc" CXX="x86_64-w64-mingw32-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
+    fi
+  elif [ "${goos}" = "darwin" ]; then
+    if [ "${arch}" = "386" ]; then
+      CC="o32-clang" CXX="o32-clang++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
+    else
+      CC="o64-clang" CXX="o64-clang++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
+    fi
   else
-    echo 'Error: This is mips/mipsel builder only.'
+    CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
   fi
 done
 

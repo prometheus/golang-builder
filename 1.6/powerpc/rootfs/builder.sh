@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -eo pipefail
 
 # This is a Makefile based building processus
 [ ! -e "./Makefile" ] && echo "Error: A Makefile with 'build' and 'test' targets must be present into the root of your source files" && exit 1
@@ -75,6 +75,7 @@ if [ ${tests} -eq 1 ]; then
   exit 0
 fi
 
+go get -v github.com/sdurrheimer/promu
 
 # Building binaries for the specified platforms
 # The `build` Makefile target is required
@@ -86,12 +87,12 @@ do
 
   echo "# ${goos}-${arch}"
   prefix=".build/${goos}-${arch}"
-  mkdir -p ${prefix}
+  mkdir -p "${prefix}"
 
   if [ "${arch}" = "ppc64" ]; then
-    CC="powerpc-linux-gnu-gcc" CXX="powerpc-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
+    CC="powerpc-linux-gnu-gcc" CXX="powerpc-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
   elif [ "${arch}" = "ppc64le" ]; then
-    CC="powerpc64le-linux-gnu-gcc" CXX="powerpc64le-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
+    CC="powerpc64le-linux-gnu-gcc" CXX="powerpc64le-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
   else
     echo 'Error: This is mips/mipsel builder only.'
   fi

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+set -eo pipefail
 
 # This is a Makefile based building processus
 [ ! -e "./Makefile" ] && echo "Error: A Makefile with 'build' and 'test' targets must be present into the root of your source files" && exit 1
@@ -75,37 +75,26 @@ if [ ${tests} -eq 1 ]; then
   exit 0
 fi
 
+go get -v github,com/sdurrheimer/promu
 
 # Building binaries for the specified platforms
 # The `build` Makefile target is required
-goarchs=(${goarchs[@]:-linux\/arm})
+goarchs=(${goarchs[@]:-linux\/mips})
 for goarch in "${goarchs[@]}"
 do
   goos=${goarch%%/*}
   arch=${goarch##*/}
 
-  if [ "${arch}" = "arm" ]; then
-    goarms=(5 6 7)
-    for goarm in "${goarms[@]}"
-    do
-      echo "# ${goos}-${arch}v${goarm}"
-      prefix=".build/${goos}-${arch}v${goarm}"
-      mkdir -p ${prefix}
+  echo "# ${goos}-${arch}"
+  prefix=".build/${goos}-${arch}"
+  mkdir -p "${prefix}"
 
-      if [ "${goarm}" = 7 ]; then
-        CC="arm-linux-gnueabihf-gcc" CXX="arm-linux-gnueabihf-g++" CGO_ENABLED=1 GOARM=${goarm} GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
-      else
-        CC="arm-linux-gnueabi-gcc" CXX="arm-linux-gnueabi-g++" CGO_ENABLED=1 GOARM=${goarm} GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
-      fi
-    done
-  elif [ "${arch}" = "arm64" ]; then
-    echo "# ${goos}-${arch}"
-    prefix=".build/${goos}-${arch}"
-    mkdir -p ${prefix}
-
-    CC="aarch64-linux-gnu-gcc" CXX="aarch64-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX=${prefix} build
+  if [ "${arch}" = "mips" ]; then
+    CC="mips-linux-gnu-gcc" CXX="mips-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
+  elif [ "${arch}" = "mipsel" ]; then
+    CC="mipsel-linux-gnu-gcc" CXX="mipsel-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
   else
-    echo 'Error: This is arm/arm64 builder only.'
+    echo 'Error: This is mips/mipsel builder only.'
   fi
 done
 

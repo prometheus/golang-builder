@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Copyright 2016 The Prometheus Authors
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,14 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REPOSITORY := prom
-NAME       := golang-builder
-BRANCH     := $(shell git rev-parse --abbrev-ref HEAD)
-SUFFIX     ?= -$(BRANCH)
-DIRNAME    := $(shell basename $(CURDIR))
+set -e
 
-build:
-	@echo ">> building $(REPOSITORY)/$(NAME):$(DIRNAME)$(SUFFIX)"
-	@docker build -t "$(REPOSITORY)/$(NAME):$(DIRNAME)$(SUFFIX)" .
+[ "$#" -lt 2 ] && echo "Missing args: $0 {VERSIONS} {VARIANTS}";
 
-.PHONY: build
+versions=( $1 )
+variants=( $2 )
+
+for version in "${versions[@]}"; do
+  for variant in "${variants[@]}"; do
+    (cd "${version}/${variant}"; make)
+  done
+done

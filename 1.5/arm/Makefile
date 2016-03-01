@@ -11,14 +11,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REPOSITORY := prom
-NAME       := golang-builder
-BRANCH     := $(shell git rev-parse --abbrev-ref HEAD)
-SUFFIX     ?= -$(BRANCH)
-DIRNAME    := $(shell basename $(CURDIR))
+REPOSITORY    := prom
+NAME          := golang-builder
+BRANCH        := $(shell git rev-parse --abbrev-ref HEAD)
+SUFFIX        ?= -$(BRANCH)
+DIRNAME       := $(shell basename $(CURDIR))
+PARENTDIRNAME := $(shell basename $(shell dirname $(CURDIR)))
 
 build:
-	@echo ">> building $(REPOSITORY)/$(NAME):$(DIRNAME)$(SUFFIX)"
-	@docker build -t "$(REPOSITORY)/$(NAME):$(DIRNAME)$(SUFFIX)" --build-arg OSXCROSS_SDK_URL=${OSXCROSS_SDK_URL} .
+	@echo ">> building $(REPOSITORY)/$(NAME):$(PARENTDIRNAME)-$(DIRNAME)$(SUFFIX)"
+	@docker build -t "$(REPOSITORY)/$(NAME):$(PARENTDIRNAME)-$(DIRNAME)$(SUFFIX)" .
 
 .PHONY: build

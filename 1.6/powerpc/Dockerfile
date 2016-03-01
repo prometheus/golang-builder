@@ -1,4 +1,4 @@
-FROM        golang:1.5.3
+FROM        golang:1.6.0
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 VOLUME  /app
@@ -10,7 +10,7 @@ RUN \
     && dpkg --add-architecture ppc64el \
     && echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.list.d/crosstools.list \
     && curl http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add - \
-    && apt-get update && apt-get update && apt-get upgrade -y \
+    && apt-get update && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends \
         crossbuild-essential-powerpc \
         crossbuild-essential-ppc64el \
