@@ -49,7 +49,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     *)
-      echo "Error: Unkown option: ${opt}"
+      echo "Error: Unknown option: ${opt}"
       usage
       exit 1
       ;;
