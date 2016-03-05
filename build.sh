@@ -22,6 +22,8 @@ variants=( $2 )
 
 for version in "${versions[@]}"; do
   for variant in "${variants[@]}"; do
-    (cd "${version}/${variant}"; make)
+    if [ -d "${version}/${variant}" ]; then
+      (cd "${version}/${variant}"; make)
+    fi
   done
 done
