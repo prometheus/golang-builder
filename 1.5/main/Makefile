@@ -15,11 +15,13 @@ REPOSITORY    := prom
 NAME          := golang-builder
 BRANCH        := $(shell git rev-parse --abbrev-ref HEAD)
 SUFFIX        ?= -$(BRANCH)
+VERSION       := $(shell awk '$$1 == "FROM" { print $$2; exit }' Dockerfile | sed 's/golang://')
 DIRNAME       := $(shell basename $(CURDIR))
 PARENTDIRNAME := $(shell basename $(shell dirname $(CURDIR)))
 
 build:
-	@echo ">> building $(REPOSITORY)/$(NAME):$(PARENTDIRNAME)-$(DIRNAME)$(SUFFIX)"
-	@docker build -t "$(REPOSITORY)/$(NAME):$(PARENTDIRNAME)-$(DIRNAME)$(SUFFIX)" --build-arg OSXCROSS_SDK_URL=${OSXCROSS_SDK_URL} .
+	@echo ">> building $(REPOSITORY)/$(NAME):$(VERSION)-$(DIRNAME)$(SUFFIX)"
+	@docker build -t "$(REPOSITORY)/$(NAME):$(VERSION)-$(DIRNAME)$(SUFFIX)" --build-arg OSXCROSS_SDK_URL=${OSXCROSS_SDK_URL} .
+	@docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-$(DIRNAME)$(SUFFIX)" "$(REPOSITORY)/$(NAME):$(PARENTDIRNAME)-$(DIRNAME)$(SUFFIX)"
 
 .PHONY: build
