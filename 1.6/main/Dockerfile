@@ -1,16 +1,22 @@
-FROM        golang:1.6.0
+FROM        prom/golang-builder:1.6-base
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 VOLUME  /app
 WORKDIR /app
 
-ENV DEBIAN_FRONTEND=noninteractive
 RUN \
     dpkg --add-architecture i386 \
     && apt-get update && apt-get install -y --no-install-recommends \
-        libc6-dev-i386 zlib1g-dev libmpc-dev libmpfr-dev libgmp-dev mingw-w64 \
-        clang llvm-dev libxml2-dev uuid-dev libssl-dev patch xz-utils bzip2 cpio \
+        clang \
+        g++ \
+        gcc \
         gcc-multilib \
+        libc6-dev \
+        libc6-dev-i386 \
+        linux-libc-dev:i386 \
+        mingw-w64 \
+        patch \
+        xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
 ARG OSXCROSS_SDK_URL
@@ -21,9 +27,9 @@ ENV OSXCROSS_PATH=/usr/osxcross \
     OSX_VERSION_MIN=10.6
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
-    && curl -sL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
+    && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
         | tar -C /tmp/osxcross --strip=1 -xzf - \
-    && curl -sLo tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz ${OSXCROSS_SDK_URL} \
+    && curl -sSLo tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz ${OSXCROSS_SDK_URL} \
     && UNATTENDED=yes ./build.sh >/dev/null \
     && mv target "${OSXCROSS_PATH}" \
     && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
