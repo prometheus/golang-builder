@@ -89,12 +89,12 @@ do
   prefix=".build/${goos}-${arch}"
   mkdir -p "${prefix}"
 
-  if [ "${arch}" = "mips" ]; then
+  if [ "${arch}" = "mips64" ]; then
     CC="mips-linux-gnu-gcc" CXX="mips-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
-  elif [ "${arch}" = "mipsel" ]; then
+  elif [ "${arch}" = "mips64le" ]; then
     CC="mipsel-linux-gnu-gcc" CXX="mipsel-linux-gnu-g++" CGO_ENABLED=1 GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
   else
-    echo 'Error: This is mips/mipsel builder only.'
+    echo 'Error: This is mips64/mips64le builder only.'
   fi
 done
 

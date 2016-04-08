@@ -15,7 +15,7 @@ REPOSITORY := prom
 NAME       := golang-builder
 LATEST     ?= 1.5
 VERSIONS   ?= 1.5 1.6
-VARIANTS   ?= main arm powerpc mips
+VARIANTS   ?= base main arm powerpc mips
 
 all: build
 
