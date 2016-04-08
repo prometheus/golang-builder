@@ -10,6 +10,14 @@
 
 Docker Builder Image for cross-building Golang Prometheus projects.
 
+- `latest`, `main`, `1.5-main`, `1.5.3-main` ([1.5/main/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.5/main/Dockerfile))
+- `arm`, `1.5-arm`, `1.5.3-arm` ([1.5/arm/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.5/arm/Dockerfile))
+- `powerpc`, `1.5-powerpc`, `1.5.3-powerpc` ([1.5/powerpc/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.5/powerpc/Dockerfile))
+- `1.6-main`, `1.6.0-main` ([1.6/main/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/main/Dockerfile))
+- `1.6-arm`, `1.6.0-arm` ([1.6/arm/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/arm/Dockerfile))
+- `1.6-powerpc`, `1.6.0-powerpc` ([1.6/powerpc/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/powerpc/Dockerfile))
+- `1.6-mips`, `1.6.0-mips` ([1.6/mips/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/mips/Dockerfile))
+
 ## Usage
 
 Change the repository import path (`-i`) and target platforms (`-p`) according to your needs.
@@ -31,7 +39,7 @@ Therefore a `Makefile` with `build` and `test` targets is needed into the root o
 
 ```
 docker run --rm -ti -v $(pwd):/app prom/golang-builder:main \
-    -i "github.com/prometheus/alertmanager" \
+    -i "github.com/prometheus/prometheus" \
     -p "linux/amd64 linux/386 darwin/amd64 darwin/386 windows/amd64 windows/386 freebsd/amd64 freebsd/386 openbsd/amd64 openbsd/386 netbsd/amd64 netbsd/386 dragonfly/amd64"
 ```
 
@@ -39,7 +47,7 @@ docker run --rm -ti -v $(pwd):/app prom/golang-builder:main \
 
 ```
 docker run --rm -ti -v $(pwd):/app prom/golang-builder:arm \
-    -i "github.com/prometheus/alertmanager" \
+    -i "github.com/prometheus/prometheus" \
     -p "linux/arm linux/arm64 freebsd/arm openbsd/arm netbsd/arm"
 ```
 
@@ -47,18 +55,18 @@ docker run --rm -ti -v $(pwd):/app prom/golang-builder:arm \
 
 ```
 docker run --rm -ti -v $(pwd):/app prom/golang-builder:powerpc \
-    -i "github.com/prometheus/alertmanager" \
+    -i "github.com/prometheus/prometheus" \
     -p "linux/ppc64 linux/ppc64le"
 ```
 
 ### mips tag
 
-mips/mipsel cross-build is currently not working.
+mips64/mips64le cross-build is currently available with golang 1.6.
 
 ```
-docker run --rm -ti -v $(pwd):/app prom/golang-builder:mips \
-    -i "github.com/prometheus/alertmanager" \
-    -p "linux/mips linux/mipsel"
+docker run --rm -ti -v $(pwd):/app prom/golang-builder:1.6-mips \
+    -i "github.com/prometheus/prometheus" \
+    -p "linux/mips64 linux/mips64le"
 ```
 
 ## Legal note
