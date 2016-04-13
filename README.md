@@ -10,13 +10,13 @@
 
 Docker Builder Image for cross-building Golang Prometheus projects.
 
-- `latest`, `main`, `1.5-main`, `1.5.3-main` ([1.5/main/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.5/main/Dockerfile))
-- `arm`, `1.5-arm`, `1.5.3-arm` ([1.5/arm/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.5/arm/Dockerfile))
-- `powerpc`, `1.5-powerpc`, `1.5.3-powerpc` ([1.5/powerpc/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.5/powerpc/Dockerfile))
-- `1.6-main`, `1.6.0-main` ([1.6/main/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/main/Dockerfile))
-- `1.6-arm`, `1.6.0-arm` ([1.6/arm/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/arm/Dockerfile))
-- `1.6-powerpc`, `1.6.0-powerpc` ([1.6/powerpc/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/powerpc/Dockerfile))
-- `1.6-mips`, `1.6.0-mips` ([1.6/mips/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/mips/Dockerfile))
+- `latest`, `main`, `1.5-main`, `1.5.4-main` ([1.5/main/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.5/main/Dockerfile))
+- `arm`, `1.5-arm`, `1.5.4-arm` ([1.5/arm/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.5/arm/Dockerfile))
+- `powerpc`, `1.5-powerpc`, `1.5.4-powerpc` ([1.5/powerpc/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.5/powerpc/Dockerfile))
+- `1.6-main`, `1.6.1-main` ([1.6/main/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/main/Dockerfile))
+- `1.6-arm`, `1.6.1-arm` ([1.6/arm/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/arm/Dockerfile))
+- `1.6-powerpc`, `1.6.1-powerpc` ([1.6/powerpc/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/powerpc/Dockerfile))
+- `1.6-mips`, `1.6.1-mips` ([1.6/mips/Dockerfile](https://github.com/prometheus/golang-builder/blob/master/1.6/mips/Dockerfile))
 
 ## Usage
 
