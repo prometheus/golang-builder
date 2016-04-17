@@ -75,8 +75,6 @@ if [ ${tests} -eq 1 ]; then
   exit 0
 fi
 
-go get -v github.com/sdurrheimer/promu
-
 # Building binaries for the specified platforms
 # The `build` Makefile target is required
 goarchs=(${goarchs[@]:-linux\/ppc64})
