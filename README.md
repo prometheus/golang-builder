@@ -86,3 +86,5 @@ Refer to [CONTRIBUTING.md](CONTRIBUTING.md)
 Apache License 2.0, see [LICENSE](LICENSE).
 
 [quayio]: https://quay.io/repository/prometheus/golang-builder
+[circleci]: https://circleci.com/gh/prometheus/golang-builder
+
