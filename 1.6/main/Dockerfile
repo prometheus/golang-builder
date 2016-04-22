@@ -1,4 +1,4 @@
-FROM        prom/golang-builder:1.6-base
+FROM        quay.io/prometheus/golang-builder:1.6-base
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 VOLUME  /app

@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REPOSITORY := prom
+REPOSITORY := quay.io/prometheus
 NAME       := golang-builder
 LATEST     ?= 1.5
 VERSIONS   ?= 1.5 1.6
