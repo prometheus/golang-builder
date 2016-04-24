@@ -1,4 +1,4 @@
-FROM        debian:sid
+FROM        debian:testing
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 RUN \
