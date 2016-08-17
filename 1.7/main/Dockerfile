@@ -1,4 +1,4 @@
-FROM        quay.io/prometheus/golang-builder:1.5-base
+FROM        quay.io/prometheus/golang-builder:1.7-base
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 VOLUME  /app
@@ -21,7 +21,7 @@ RUN \
 
 ARG OSXCROSS_SDK_URL
 ENV OSXCROSS_PATH=/usr/osxcross \
-    OSXCROSS_REV=c5ffd32171b3771ef6412e5ba2a6fd09e694294a \
+    OSXCROSS_REV=3034f7149716d815bc473d0a7b35d17e4cf175aa \
     SDK_VERSION=10.11 \
     DARWIN_VERSION=15 \
     OSX_VERSION_MIN=10.6
