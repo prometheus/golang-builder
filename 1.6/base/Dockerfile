@@ -6,6 +6,7 @@ RUN \
         ca-certificates \
         curl \
         git \
+        gnupg \
         make \
 	&& rm -rf /var/lib/apt/lists/*
 
