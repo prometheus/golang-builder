@@ -8,6 +8,9 @@ RUN \
         crossbuild-essential-arm64 \
         crossbuild-essential-armel \
         crossbuild-essential-armhf \
+        linux-libc-dev-arm64-cross \
+        linux-libc-dev-armel-cross \
+        linux-libc-dev-armhf-cross \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
