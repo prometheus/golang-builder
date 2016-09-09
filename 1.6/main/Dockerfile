@@ -1,9 +1,6 @@
 FROM        quay.io/prometheus/golang-builder:1.6-base
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
-VOLUME  /app
-WORKDIR /app
-
 RUN \
     dpkg --add-architecture i386 \
     && apt-get update && apt-get install -y --no-install-recommends \
@@ -37,5 +34,3 @@ RUN \
 ENV PATH $OSXCROSS_PATH/bin:$PATH
 
 COPY rootfs /
-
-ENTRYPOINT ["/builder.sh"]
