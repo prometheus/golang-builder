@@ -3,10 +3,12 @@ MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 RUN \
     apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
         ca-certificates \
         curl \
         git \
         gnupg \
+        libsnmp-dev \
         make \
 	&& rm -rf /var/lib/apt/lists/*
 
