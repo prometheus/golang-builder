@@ -7,14 +7,14 @@
 
 Docker Builder Image for cross-building Golang Prometheus projects.
 
-- `latest`, `main`, `1.7-main`, `1.7.5-main` ([1.7/main/Dockerfile](1.7/main/Dockerfile))
-- `arm`, `1.7-arm`, `1.7.5-arm` ([1.7/arm/Dockerfile](1.7/arm/Dockerfile))
-- `powerpc`, `1.7-powerpc`, `1.7.5-powerpc` ([1.7/powerpc/Dockerfile](1.7/powerpc/Dockerfile))
-- `mips`, `1.7-mips`, `1.7.5-mips` ([1.7/mips/Dockerfile](1.7/mips/Dockerfile))
-- `1.8-main`, `1.8.0-main` ([1.8/main/Dockerfile](1.8/main/Dockerfile))
-- `1.8-arm`, `1.8.0-arm` ([1.8/arm/Dockerfile](1.8/arm/Dockerfile))
-- `1.8-powerpc`, `1.8.0-powerpc` ([1.8/powerpc/Dockerfile](1.8/powerpc/Dockerfile))
-- `1.8-mips`, `1.8.0-mips` ([1.8/mips/Dockerfile](1.8/mips/Dockerfile))
+- `latest`, `main`, `1.8-main`, `1.8.1-main` ([1.8/main/Dockerfile](1.8/main/Dockerfile))
+- `arm`, `1.8-arm`, `1.8.1-arm` ([1.8/arm/Dockerfile](1.8/arm/Dockerfile))
+- `powerpc`, `1.8-powerpc`, `1.8.1-powerpc` ([1.8/powerpc/Dockerfile](1.8/powerpc/Dockerfile))
+- `mips`, `1.8-mips`, `1.8.1-mips` ([1.8/mips/Dockerfile](1.8/mips/Dockerfile))
+- `1.7-main`, `1.7.5-main` ([1.7/main/Dockerfile](1.7/main/Dockerfile))
+- `1.7-arm`, `1.7.5-arm` ([1.7/arm/Dockerfile](1.7/arm/Dockerfile))
+- `1.7-powerpc`, `1.7.5-powerpc` ([1.7/powerpc/Dockerfile](1.7/powerpc/Dockerfile))
+- `1.7-mips`, `1.7.5-mips` ([1.7/mips/Dockerfile](1.7/mips/Dockerfile))
 - `1.6-main`, `1.6.4-main` ([1.6/main/Dockerfile](1.6/main/Dockerfile))
 - `1.6-arm`, `1.6.4-arm` ([1.6/arm/Dockerfile](1.6/arm/Dockerfile))
 - `1.6-powerpc`, `1.6.4-powerpc` ([1.6/powerpc/Dockerfile](1.6/powerpc/Dockerfile))
@@ -34,7 +34,7 @@ Usage: builder.sh [args]
 
 ### Requirements
 
-This building process is using make to build and run tests. 
+This building process is using make to build and run tests.
 Therefore a `Makefile` with `build` and `test` targets is needed into the root of your source files.
 
 ### main/latest tag
