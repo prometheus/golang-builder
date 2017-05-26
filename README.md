@@ -7,10 +7,10 @@
 
 Docker Builder Image for cross-building Golang Prometheus projects.
 
-- `latest`, `main`, `1.8-main`, `1.8.1-main` ([1.8/main/Dockerfile](1.8/main/Dockerfile))
-- `arm`, `1.8-arm`, `1.8.1-arm` ([1.8/arm/Dockerfile](1.8/arm/Dockerfile))
-- `powerpc`, `1.8-powerpc`, `1.8.1-powerpc` ([1.8/powerpc/Dockerfile](1.8/powerpc/Dockerfile))
-- `mips`, `1.8-mips`, `1.8.1-mips` ([1.8/mips/Dockerfile](1.8/mips/Dockerfile))
+- `latest`, `main`, `1.8-main`, `1.8.3-main` ([1.8/main/Dockerfile](1.8/main/Dockerfile))
+- `arm`, `1.8-arm`, `1.8.3-arm` ([1.8/arm/Dockerfile](1.8/arm/Dockerfile))
+- `powerpc`, `1.8-powerpc`, `1.8.3-powerpc` ([1.8/powerpc/Dockerfile](1.8/powerpc/Dockerfile))
+- `mips`, `1.8-mips`, `1.8.3-mips` ([1.8/mips/Dockerfile](1.8/mips/Dockerfile))
 - `1.7-main`, `1.7.5-main` ([1.7/main/Dockerfile](1.7/main/Dockerfile))
 - `1.7-arm`, `1.7.5-arm` ([1.7/arm/Dockerfile](1.7/arm/Dockerfile))
 - `1.7-powerpc`, `1.7.5-powerpc` ([1.7/powerpc/Dockerfile](1.7/powerpc/Dockerfile))
