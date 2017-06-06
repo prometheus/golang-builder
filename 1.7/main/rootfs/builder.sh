@@ -17,6 +17,7 @@ source /common.sh
 
 # Building binaries for the specified platforms
 # The `build` Makefile target is required
+declare -a goarchs
 goarchs=(${goarchs[@]:-linux\/amd64})
 for goarch in "${goarchs[@]}"
 do
@@ -27,14 +28,14 @@ do
   prefix=".build/${goos}-${arch}"
   mkdir -p "${prefix}"
 
-  if [ "${goos}" = "windows" ]; then
-    if [ "${arch}" = "386" ]; then
+  if [[ "${goos}" == "windows" ]]; then
+    if [[ "${arch}" == "386" ]]; then
       CC="i686-w64-mingw32-gcc" CXX="i686-w64-mingw32-g++" GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
     else
       CC="x86_64-w64-mingw32-gcc" CXX="x86_64-w64-mingw32-g++" GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
     fi
-  elif [ "${goos}" = "darwin" ]; then
-    if [ "${arch}" = "386" ]; then
+  elif [[ "${goos}" == "darwin" ]]; then
+    if [[ "${arch}" == "386" ]]; then
       CC="o32-clang" CXX="o32-clang++" GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
     else
       CC="o64-clang" CXX="o64-clang++" GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
