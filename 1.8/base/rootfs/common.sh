@@ -16,7 +16,7 @@
 set -eo pipefail
 
 # This is a Makefile based building processus
-[ ! -e "./Makefile" ] && echo "Error: A Makefile with 'build' and 'test' targets must be present into the root of your source files" && exit 1
+[[ ! -e "./Makefile" ]] && echo "Error: A Makefile with 'build' and 'test' targets must be present into the root of your source files" && exit 1
 
 usage() {
   base="$(basename "$0")"
@@ -28,7 +28,7 @@ Usage: ${base} [args]
 EOUSAGE
 }
 
-if [ $# -eq 0 ]; then
+if [[ $# -eq 0 ]]; then
   usage
 fi
 
@@ -56,7 +56,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-[ -z "${repoName}" ] && echo "Error: {-i,--import-path} option is mandatory" && exit 1
+[[ -z "${repoName}" ]] && echo "Error: {-i,--import-path} option is mandatory" && exit 1
 
 # Get first path listed in GOPATH
 goPath="${GOPATH%%:*}"
@@ -69,7 +69,7 @@ ln -sf /app "${repoPath}"
 # Running tests
 # The `test` Makefile target is required
 tests=${tests:-0}
-if [ ${tests} -eq 1 ]; then
+if [[ ${tests} -eq 1 ]]; then
   # Need to be in the proper GOPATH to run tests
   cd "${repoPath}" ; make test
   exit 0

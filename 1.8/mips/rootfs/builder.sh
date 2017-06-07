@@ -17,6 +17,7 @@ source /common.sh
 
 # Building binaries for the specified platforms
 # The `build` Makefile target is required
+declare -a goarchs
 goarchs=(${goarchs[@]:-linux\/mips})
 for goarch in "${goarchs[@]}"
 do
@@ -27,12 +28,13 @@ do
   prefix=".build/${goos}-${arch}"
   mkdir -p "${prefix}"
 
-  if [ "${arch}" = "mips64" ]; then
+  if [[ "${arch}" == "mips64" ]]; then
     CC="mips-linux-gnu-gcc" CXX="mips-linux-gnu-g++" GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
-  elif [ "${arch}" = "mips64le" ]; then
+  elif [[ "${arch}" == "mips64le" ]]; then
     CC="mipsel-linux-gnu-gcc" CXX="mipsel-linux-gnu-g++" GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
   else
     echo 'Error: This is mips64/mips64le builder only.'
+    exit 1
   fi
 done
 
