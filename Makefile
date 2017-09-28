@@ -13,8 +13,8 @@
 
 REPOSITORY := quay.io/prometheus
 NAME       := golang-builder
-LATEST     ?= 1.8
-VERSIONS   ?= 1.7 1.8
+LATEST     ?= 1.9
+VERSIONS   ?= 1.8 1.9
 VARIANTS   ?= base main arm powerpc mips
 
 all: build

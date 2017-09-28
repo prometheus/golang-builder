@@ -1,11 +1,10 @@
-FROM        quay.io/prometheus/golang-builder:1.8-base
+FROM        quay.io/prometheus/golang-builder:1.9-base
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 RUN \
     apt-get update && apt-get install -y --no-install-recommends \
-        crossbuild-essential-mipsel \
-        g++-mips-linux-gnu \
-        gcc-mips-linux-gnu \
+        crossbuild-essential-powerpc \
+        crossbuild-essential-ppc64el \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /

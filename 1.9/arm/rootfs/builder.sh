@@ -23,7 +23,6 @@ for goarch in "${goarchs[@]}"
 do
   goos=${goarch%%/*}
   arch=${goarch##*/}
-
   if [[ "${arch}" =~ ^armv.*$ ]]; then
     goarm=${arch##*v}
     arch="arm"

@@ -7,14 +7,14 @@
 
 Docker Builder Image for cross-building Golang Prometheus projects.
 
-- `latest`, `main`, `1.8-main`, `1.8.3-main` ([1.8/main/Dockerfile](1.8/main/Dockerfile))
-- `arm`, `1.8-arm`, `1.8.3-arm` ([1.8/arm/Dockerfile](1.8/arm/Dockerfile))
-- `powerpc`, `1.8-powerpc`, `1.8.3-powerpc` ([1.8/powerpc/Dockerfile](1.8/powerpc/Dockerfile))
-- `mips`, `1.8-mips`, `1.8.3-mips` ([1.8/mips/Dockerfile](1.8/mips/Dockerfile))
-- `1.7-main`, `1.7.6-main` ([1.7/main/Dockerfile](1.7/main/Dockerfile))
-- `1.7-arm`, `1.7.6-arm` ([1.7/arm/Dockerfile](1.7/arm/Dockerfile))
-- `1.7-powerpc`, `1.7.6-powerpc` ([1.7/powerpc/Dockerfile](1.7/powerpc/Dockerfile))
-- `1.7-mips`, `1.7.6-mips` ([1.7/mips/Dockerfile](1.7/mips/Dockerfile))
+- `latest`, `main`, `1.9-main`, `1.9.0-main` ([1.9/main/Dockerfile](1.9/main/Dockerfile))
+- `arm`, `1.9-arm`, `1.9.0-arm` ([1.9/arm/Dockerfile](1.9/arm/Dockerfile))
+- `powerpc`, `1.9-powerpc`, `1.9.0-powerpc` ([1.9/powerpc/Dockerfile](1.9/powerpc/Dockerfile))
+- `mips`, `1.9-mips`, `1.9.0-mips` ([1.9/mips/Dockerfile](1.9/mips/Dockerfile))
+- `1.8-main`, `1.8.3-main` ([1.8/main/Dockerfile](1.8/main/Dockerfile))
+- `1.8-arm`, `1.8.3-arm` ([1.8/arm/Dockerfile](1.8/arm/Dockerfile))
+- `1.8-powerpc`, `1.8.3-powerpc` ([1.8/powerpc/Dockerfile](1.8/powerpc/Dockerfile))
+- `1.8-mips`, `1.8.3-mips` ([1.8/mips/Dockerfile](1.8/mips/Dockerfile))
 
 ## Usage
 
