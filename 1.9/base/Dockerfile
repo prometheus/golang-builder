@@ -2,15 +2,17 @@ FROM        debian:stable
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 RUN \
-    apt-get update && apt-get install -y --no-install-recommends \
-        build-essential \
-        ca-certificates \
-        curl \
-        git \
-        gnupg \
-        libsnmp-dev \
-        make \
-	&& rm -rf /var/lib/apt/lists/*
+    apt-get update \
+        && apt-get dist-upgrade -y \
+        && apt-get install -y --no-install-recommends \
+            build-essential \
+            ca-certificates \
+            curl \
+            git \
+            gnupg \
+            libsnmp-dev \
+            make \
+        && rm -rf /var/lib/apt/lists/*
 
 ENV GOLANG_VERSION 1.9.5
 ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
