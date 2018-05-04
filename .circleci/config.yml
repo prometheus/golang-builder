@@ -1,0 +1,37 @@
+---
+version: 2
+
+jobs:
+  build:
+    machine: true
+
+    steps:
+    - checkout
+    - run: docker info
+    - run: make
+    - run: docker images
+
+  build_master:
+    machine: true
+
+    steps:
+    - checkout
+    - run: docker info
+    - run: make SUFFIX=
+    - run: docker images
+    - run: make tag SUFFIX=
+    - run: docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
+    - run: make push
+
+workflows:
+  version: 2
+  prometheus:
+    jobs:
+    - build:
+        filters:
+          branches:
+            ignore: master
+    - build_master:
+        filters:
+          branches:
+            only: master
