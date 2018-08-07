@@ -6,6 +6,7 @@ RUN \
         crossbuild-essential-mipsel \
         g++-mips-linux-gnu \
         gcc-mips-linux-gnu \
+        libc6-dev-mipsel-cross \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
