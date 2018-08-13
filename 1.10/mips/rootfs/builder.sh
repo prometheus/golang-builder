@@ -28,14 +28,18 @@ do
   prefix=".build/${goos}-${arch}"
   mkdir -p "${prefix}"
 
-  if [[ "${arch}" == "mips64" ]]; then
-    CC="mips-linux-gnu-gcc" CXX="mips-linux-gnu-g++" GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
-  elif [[ "${arch}" == "mips64le" ]]; then
-    CC="mipsel-linux-gnu-gcc" CXX="mipsel-linux-gnu-g++" GOOS=${goos} GOARCH=${arch} make PREFIX="${prefix}" build
-  else
-    echo 'Error: This is mips64/mips64le builder only.'
-    exit 1
-  fi
+  case "${arch}" in
+    mips) cc="mips-linux-gnu-gcc" cxx="mips-linux-gnu-g++" ;;
+    mips64) cc="mips64-linux-gnuabi64-gcc" cxx="mips64-linux-gnuabi64-g++" ;;
+    mipsle) cc="mipsel-linux-gnu-gcc" cxx="mipsel-linux-gnu-g++" ;;
+    mips64le) cc="mips64el-linux-gnuabi64-gcc" cxx="mips64el-linux-gnuabi64-g++" ;;
+    *)
+      echo 'Error: This is mips64/mips64le builder only.'
+      exit 1
+      ;;
+  esac
+  CC="${cc}" CXX="${cxx}" GOOS="${goos}" GOARCH="${arch}" \
+    make PREFIX="${prefix}" build
 done
 
 exit 0
