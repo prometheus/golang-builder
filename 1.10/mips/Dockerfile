@@ -13,6 +13,7 @@ RUN \
         libc6-dev-mips64-mips-cross \
         libc6-dev-mips64-mipsel-cross \
         libc6-dev-mips64el-cross \
+        libgcc1-mips64-cross \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /
