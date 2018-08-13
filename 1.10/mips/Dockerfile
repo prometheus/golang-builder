@@ -8,12 +8,15 @@ RUN \
         gcc-mips-linux-gnu \
         g++-mipsel-linux-gnu \
         gcc-mipsel-linux-gnu \
+        g++-mips64-linux-gnuabi64 \
+        gcc-mips64-linux-gnuabi64 \
+        g++-mips64el-linux-gnuabi64 \
+        gcc-mips64el-linux-gnuabi64 \
         libc6-dev-mipsel-cross \
         libc6-dev-mips64-cross \
         libc6-dev-mips64-mips-cross \
         libc6-dev-mips64-mipsel-cross \
         libc6-dev-mips64el-cross \
-        libgcc1-mips64-cross \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /

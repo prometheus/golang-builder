@@ -29,8 +29,10 @@ do
   mkdir -p "${prefix}"
 
   case "${arch}" in
-    mips|mips64) cc="mips-linux-gnu-gcc" cxx="mips-linux-gnu-g++" ;;
-    mipsle|mips64le) cc="mipsel-linux-gnu-gcc" cxx="mipsel-linux-gnu-g++" ;;
+    mips) cc="mips-linux-gnu-gcc" cxx="mips-linux-gnu-g++" ;;
+    mips64) cc="mips64-linux-gnuabi64-gcc" cxx="mips64-linux-gnuabi64-g++" ;;
+    mipsle) cc="mipsel-linux-gnu-gcc" cxx="mipsel-linux-gnu-g++" ;;
+    mips64le) cc="mips64el-linux-gnuabi64-gcc" cxx="mips64el-linux-gnuabi64-g++" ;;
     *)
       echo 'Error: This is mips64/mips64le builder only.'
       exit 1
