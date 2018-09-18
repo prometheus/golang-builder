@@ -40,7 +40,7 @@ while [[ $# -gt 0 ]]; do
       repoName="$2"
       shift 2
       ;;
-    -p|--plateforms)
+    -p|--platforms)
       IFS=' ' read -r -a goarchs <<< "$2"
       shift 2
       ;;
