@@ -14,7 +14,7 @@ RUN \
             make \
         && rm -rf /var/lib/apt/lists/*
 
-ENV GOLANG_VERSION 1.11.3
+ENV GOLANG_VERSION 1.11.4
 ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
 ENV GOLANG_DOWNLOAD_SHA256 d20a4869ffb13cee0f7ee777bf18c7b9b67ef0375f93fac1298519e0c227a07f
 
