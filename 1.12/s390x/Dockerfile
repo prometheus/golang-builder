@@ -1,10 +1,11 @@
-FROM        quay.io/prometheus/golang-builder:1.10-base
+FROM        quay.io/prometheus/golang-builder:1.12-base
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 RUN \
     apt-get update && apt-get install -y --no-install-recommends \
-        crossbuild-essential-powerpc \
-        crossbuild-essential-ppc64el \
+        dpkg-cross \
+        g++-s390x-linux-gnu \
+        gcc-s390x-linux-gnu \
     && rm -rf /var/lib/apt/lists/*
 
 COPY rootfs /

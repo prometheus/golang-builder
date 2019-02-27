@@ -15,7 +15,7 @@ REPOSITORY    := quay.io/prometheus
 NAME          := golang-builder
 BRANCH        := $(shell git rev-parse --abbrev-ref HEAD)
 SUFFIX        ?= -$(subst /,-,$(BRANCH))
-VERSION       := 1.10.8
+VERSION       := 1.12.0
 DIRNAME       := $(shell basename $(CURDIR))
 PARENTDIRNAME := $(shell basename $(shell dirname $(CURDIR)))
 
