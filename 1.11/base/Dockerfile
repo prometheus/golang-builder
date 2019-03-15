@@ -9,6 +9,7 @@ RUN \
             ca-certificates \
             curl \
             git \
+            bzr \
             gnupg \
             libsnmp-dev \
             make \
