@@ -15,9 +15,9 @@ RUN \
             make \
         && rm -rf /var/lib/apt/lists/*
 
-ENV GOLANG_VERSION 1.11.6
+ENV GOLANG_VERSION 1.11.7
 ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-ENV GOLANG_DOWNLOAD_SHA256 4e1864282d8d20010d6385a12a1e35641783a380a7c57907bfb46a5499c5eb49
+ENV GOLANG_DOWNLOAD_SHA256 db687814288b3b541c1754dfd4ecc2b8fd0d5e7995624945e3054a350ca573d8
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
