@@ -23,6 +23,13 @@ jobs:
     - run: docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
     - run: make push
 
+  bump_version:
+    docker:
+    - image: circleci/golang
+    steps:
+    - checkout
+    - run: ./scripts/bump_version.sh
+
 workflows:
   version: 2
   prometheus:
@@ -35,3 +42,13 @@ workflows:
         filters:
           branches:
             only: master
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+    - bump_version
