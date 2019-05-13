@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Setting -x is absolutely forbidden as it could leak the GitHub token.
-set -uoe pipefail
+set -uo pipefail
 
 GITHUB_MAIL="${GITHUB_MAIL:-prometheus-team@googlegroups.com}"
 GITHUB_USER="${GITHUB_USER:-prombot}"
@@ -13,7 +13,9 @@ if [[ -z ${GITHUB_TOKEN} ]]; then
   exit 1
 fi
 
-go run ./cmd/builder-bumper
+if ! go run ./cmd/builder-bumper; then
+  exit 1
+fi
 
 if [[ -n $(git status --porcelain) ]]; then
   git checkout -b bump_version
