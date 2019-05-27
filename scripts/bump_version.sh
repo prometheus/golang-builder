@@ -17,7 +17,7 @@ if ! go run ./cmd/builder-bumper; then
   exit 1
 fi
 
-if [[ -n $(git status --porcelain) ]]; then
+if [[ -n "$(git status --porcelain)" ]]; then
   git checkout -b bump_version
   git config user.email "${GITHUB_MAIL}"
   git config user.name "${GITHUB_USER}"
@@ -28,7 +28,7 @@ if [[ -n $(git status --porcelain) ]]; then
     curl --show-error --silent \
       -u "${GITHUB_USER}:${GITHUB_TOKEN}" \
       -X POST \
-      -d "{\"title\":\"Bump Go version\",\"base\":\"master\",\"head\":\"bump_version\",\"body\":\"\"}" \
+      -d '{"title":"Bump Go version","base":"master","head":"bump_version","body":""}' \
       "https://api.github.com/repos/prometheus/golang-builder/pulls"
   fi
 fi
