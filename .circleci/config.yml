@@ -39,6 +39,7 @@ workflows:
           branches:
             ignore: master
     - build_master:
+        context: org-context
         filters:
           branches:
             only: master
@@ -51,4 +52,5 @@ workflows:
               only:
                 - master
     jobs:
-    - bump_version
+    - bump_version:
+        context: org-context
