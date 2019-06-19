@@ -13,7 +13,7 @@ if [[ -z ${GITHUB_TOKEN} ]]; then
   exit 1
 fi
 
-if ! go run ./cmd/builder-bumper; then
+if ! GO111MODULE=on go run ./cmd/builder-bumper; then
   exit 1
 fi
 
