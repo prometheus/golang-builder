@@ -1,9 +1,6 @@
 FROM        debian:stable
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
-ENV NODE_VERSION 10.15.2~dfsg-2
-ENV YARN_VERSION 1.19.0-1
-
 RUN \
     apt-get update \
         && apt-get dist-upgrade -y \
@@ -19,7 +16,7 @@ RUN \
         && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
         && echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
         && apt-get update \
-        && apt-get install -y --no-install-recommends nodejs="$NODE_VERSION" yarn="$YARN_VERSION" \
+        && apt-get install -y --no-install-recommends nodejs yarn \
         && rm -rf /var/lib/apt/lists/*
 
 ENV GOLANG_VERSION 1.13.1
