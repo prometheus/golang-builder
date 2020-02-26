@@ -14,8 +14,8 @@
 REPOSITORY := quay.io/prometheus
 NAME       := golang-builder
 VARIANTS   ?= base main arm powerpc mips s390x
-LATEST     ?= 1.13
-VERSIONS   ?= 1.12 1.13
+LATEST     ?= 1.14
+VERSIONS   ?= 1.13 1.14
 
 all: build
 
