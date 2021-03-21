@@ -2,15 +2,15 @@ FROM        quay.io/prometheus/golang-builder:1.16-base
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 RUN \
-    dpkg --add-architecture i386 \
-    && apt-get update && apt-get install -y --no-install-recommends \
+    apt-get update && apt-get install -y --no-install-recommends \
         clang \
+        cmake \
         g++ \
         gcc \
         gcc-multilib \
         libc6-dev \
-        libc6-dev-i386 \
-        linux-libc-dev:i386 \
+        libxml2-dev \
+        lzma-dev \
         mingw-w64 \
         patch \
         xz-utils \
@@ -18,10 +18,10 @@ RUN \
 
 ARG PROM_OSX_SDK_URL
 ENV OSXCROSS_PATH=/usr/osxcross \
-    OSXCROSS_REV=3034f7149716d815bc473d0a7b35d17e4cf175aa \
-    SDK_VERSION=10.11 \
-    DARWIN_VERSION=15 \
-    OSX_VERSION_MIN=10.6
+    OSXCROSS_REV=da2c3d4ff604458a931b08b3af800c5a454136de \
+    SDK_VERSION=11.1 \
+    DARWIN_VERSION=20.1 \
+    OSX_VERSION_MIN=10.9
 RUN \
     mkdir -p /tmp/osxcross && cd /tmp/osxcross \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
