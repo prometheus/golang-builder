@@ -1,21 +1,28 @@
 ---
-version: 2
+version: 2.1
+
+executors:
+  golang:
+    docker:
+    - image: cimg/go:1.16
 
 jobs:
   build:
-    machine: true
+    executor: golang
 
     steps:
     - checkout
+    - setup_remote_docker
     - run: docker info
     - run: make
     - run: docker images
 
   build_master:
-    machine: true
+    executor: golang
 
     steps:
     - checkout
+    - setup_remote_docker
     - run: docker info
     - run: make SUFFIX=
     - run: docker images
@@ -24,15 +31,15 @@ jobs:
     - run: make push
 
   bump_version:
-    docker:
-    - image: circleci/golang
+    executor: golang
+
     steps:
     - checkout
     - run: ./scripts/bump_version.sh
 
 workflows:
   version: 2
-  prometheus:
+  golang-builder:
     jobs:
     - build:
         filters:
