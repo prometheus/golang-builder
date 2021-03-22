@@ -14,7 +14,8 @@ jobs:
     - checkout
     - setup_remote_docker
     - run: docker info
-    - run: make
+    - run: make VARIANTS=base
+    - run: make VARIANTS=main
     - run: docker images
 
   build_master:

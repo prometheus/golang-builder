@@ -1,4 +1,4 @@
-FROM        debian:buster
+FROM        debian:bullseye
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 RUN \
