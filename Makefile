@@ -13,7 +13,7 @@
 
 REPOSITORY := quay.io/prometheus
 NAME       := golang-builder
-VARIANTS   ?= base main arm powerpc mips s390x
+VARIANTS   ?= base main
 LATEST     ?= 1.16
 VERSIONS   ?= 1.15 1.16
 
@@ -25,10 +25,10 @@ build:
 tag:
 	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-main" "$(REPOSITORY)/$(NAME):latest"
 	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-main" "$(REPOSITORY)/$(NAME):main"
-	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-arm" "$(REPOSITORY)/$(NAME):arm"
-	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-powerpc" "$(REPOSITORY)/$(NAME):powerpc"
-	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-mips" "$(REPOSITORY)/$(NAME):mips"
-	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-s390x" "$(REPOSITORY)/$(NAME):s390x"
+	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-main" "$(REPOSITORY)/$(NAME):arm"
+	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-main" "$(REPOSITORY)/$(NAME):powerpc"
+	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-main" "$(REPOSITORY)/$(NAME):mips"
+	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-main" "$(REPOSITORY)/$(NAME):s390x"
 
 push:
 	docker push "$(REPOSITORY)/$(NAME)"
