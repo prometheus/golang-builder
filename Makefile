@@ -31,6 +31,12 @@ tag:
 	docker tag "$(REPOSITORY)/$(NAME):$(LATEST)-main" "$(REPOSITORY)/$(NAME):s390x"
 
 push:
-	docker push "$(REPOSITORY)/$(NAME)"
+	docker push "$(REPOSITORY)/$(NAME):latest"
+	docker push "$(REPOSITORY)/$(NAME):main"
+	docker push "$(REPOSITORY)/$(NAME):arm"
+	docker push "$(REPOSITORY)/$(NAME):powerpc"
+	docker push "$(REPOSITORY)/$(NAME):mips"
+	docker push "$(REPOSITORY)/$(NAME):s390x"
+	docker push "$(REPOSITORY)/$(NAME):$(LATEST)-main"
 
 .PHONY: all build tag push
