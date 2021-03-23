@@ -10,21 +10,33 @@ jobs:
   build:
     executor: golang
 
+    parameters:
+      version:
+        type: string
+
     steps:
     - checkout
     - setup_remote_docker
     - run: docker info
-    - run: make
+    - run: make VARIANTS=base VERSION=<< parameters.version >>
+    - run: make VARIANTS=main VERSION=<< parameters.version >>
     - run: docker images
+    - run: ls -l docker-images
+    - persist_to_workspace:
+        root: .
+        paths:
+        - docker-images
 
-  build_master:
+
+  publish:
     executor: golang
 
     steps:
     - checkout
     - setup_remote_docker
-    - run: docker info
-    - run: make SUFFIX=
+    - attach_workspace:
+        at: .
+    - run: for i in docker-images/*; do docker load -i "$i" ; done
     - run: docker images
     - run: make tag SUFFIX=
     - run: docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
@@ -42,11 +54,18 @@ workflows:
   golang-builder:
     jobs:
     - build:
+        matrix:
+          parameters:
+            version:
+            - "1.15"
+            - "1.16"
         filters:
           branches:
             ignore: master
-    - build_master:
+    - publish:
         context: org-context
+        requires:
+        - build
         filters:
           branches:
             only: master

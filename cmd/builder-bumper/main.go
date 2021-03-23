@@ -251,6 +251,17 @@ func replaceMajor(old, current, next *goVersion) error {
 		return errors.Wrap(err, "failed to create new version directory")
 	}
 
+	// Update CircleCI.
+	err = replace(".circleci/config.yml",
+		[]func(string) (string, error){
+			majorVersionReplacer(current, next),
+			majorVersionReplacer(old, current),
+		},
+	)
+	if err != nil {
+		return err
+	}
+
 	// Update Makefile.
 	err = replace("Makefile",
 		[]func(string) (string, error){
