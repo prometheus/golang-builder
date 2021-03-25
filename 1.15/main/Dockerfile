@@ -17,7 +17,7 @@ RUN \
         crossbuild-essential-i386 linux-libc-dev-i386-cross \
         crossbuild-essential-mips linux-libc-dev-mips-cross \
         crossbuild-essential-mipsel linux-libc-dev-mipsel-cross \
-        gcc-mips64-linux-gnuabi64 g++-mips64-linux-gnuabi64 linux-libc-dev-mips64-cross \
+        crossbuild-essential-mips64 linux-libc-dev-mips64-cross \
         crossbuild-essential-mips64el linux-libc-dev-mips64el-cross \
         crossbuild-essential-powerpc linux-libc-dev-powerpc-cross \
         crossbuild-essential-ppc64el linux-libc-dev-ppc64el-cross \
@@ -35,7 +35,7 @@ RUN \
     && curl -sSL "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
         | tar -C /tmp/osxcross --strip=1 -xzf - \
     && curl -sSLo tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz "${PROM_OSX_SDK_URL}/MacOSX${SDK_VERSION}.sdk.tar.xz" \
-    && UNATTENDED=yes JOBS=2 ./build.sh \
+    && UNATTENDED=yes JOBS=2 OCDEBUG=1 ./build.sh \
     && mv target "${OSXCROSS_PATH}" \
     && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
 
