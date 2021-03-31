@@ -1,55 +1,46 @@
----
 version: 2.1
-
 executors:
   golang:
     docker:
-    - image: cimg/go:1.16
-
+      - image: cimg/go:1.16
 jobs:
   build:
     executor: golang
-
     steps:
-    - checkout
-    - setup_remote_docker
-    - run: docker info
-    - run: make
-    - run: docker images
-
+      - checkout
+      - setup_remote_docker
+      - run: docker info
+      - run: make
+      - run: docker images
   build_master:
     executor: golang
-
     steps:
-    - checkout
-    - setup_remote_docker
-    - run: docker info
-    - run: make SUFFIX=
-    - run: docker images
-    - run: make tag SUFFIX=
-    - run: docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
-    - run: make push
-
+      - checkout
+      - setup_remote_docker
+      - run: docker info
+      - run: make SUFFIX=
+      - run: docker images
+      - run: make tag SUFFIX=
+      - run: docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
+      - run: make push
   bump_version:
     executor: golang
-
     steps:
-    - checkout
-    - run: ./scripts/bump_version.sh
-
+      - checkout
+      - run: ./scripts/bump_version.sh
 workflows:
   version: 2
   golang-builder:
     jobs:
-    - build:
-        filters:
-          branches:
-            ignore: master
-    - build_master:
-        context: org-context
-        filters:
-          branches:
-            only: master
+      - build:
+          filters:
+            branches:
+              ignore: master
+      - build_master:
+          context: org-context
+          filters:
+            branches:
+              only: master
   nightly:
     triggers:
       - schedule:
@@ -59,5 +50,7 @@ workflows:
               only:
                 - master
     jobs:
-    - bump_version:
-        context: org-context
+      - bump_version:
+          context: org-context
+orbs:
+  prometheus: prometheus/prometheus@0.11.0
