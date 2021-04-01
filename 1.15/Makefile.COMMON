@@ -18,10 +18,14 @@ SUFFIX        ?= -$(subst /,-,$(BRANCH))
 VERSION       := 1.15.10
 DIRNAME       := $(shell basename $(CURDIR))
 PARENTDIRNAME := $(shell basename $(shell dirname $(CURDIR)))
+IMAGE_DIR     ?= .build
+IMAGE         := $(REPOSITORY)/$(NAME)
+IMAGE_FILE    := $(subst /,-,$(IMAGE))
 
 build:
-	@echo ">> building $(REPOSITORY)/$(NAME):$(VERSION)-$(DIRNAME)$(SUFFIX)"
-	@docker build -t "$(REPOSITORY)/$(NAME):$(VERSION)-$(DIRNAME)$(SUFFIX)" .
-	@docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-$(DIRNAME)$(SUFFIX)" "$(REPOSITORY)/$(NAME):$(PARENTDIRNAME)-$(DIRNAME)$(SUFFIX)"
+	@echo ">> building $(IMAGE):$(VERSION)-$(DIRNAME)$(SUFFIX)"
+	@docker build -t "$(IMAGE):$(VERSION)-$(DIRNAME)$(SUFFIX)" .
+	@docker tag "$(IMAGE):$(VERSION)-$(DIRNAME)$(SUFFIX)" "$(IMAGE):$(PARENTDIRNAME)-$(DIRNAME)$(SUFFIX)"
+	@docker save -o "$(IMAGE_DIR)/$(IMAGE_FILE)-$(VERSION)-$(DIRNAME)$(SUFFIX)" "$(IMAGE):$(VERSION)-$(DIRNAME)$(SUFFIX)"
 
 .PHONY: build
