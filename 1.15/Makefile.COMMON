@@ -17,7 +17,6 @@ BRANCH        := $(shell git rev-parse --abbrev-ref HEAD)
 SUFFIX        ?= -$(subst /,-,$(BRANCH))
 VERSION       := 1.15.11
 DIRNAME       := $(shell basename $(CURDIR))
-PARENTDIRNAME := $(shell basename $(shell dirname $(CURDIR)))
 IMAGE_DIR     ?= .build
 IMAGE         := $(REPOSITORY)/$(NAME)
 IMAGE_FILE    := $(subst /,-,$(IMAGE))
@@ -25,7 +24,7 @@ IMAGE_FILE    := $(subst /,-,$(IMAGE))
 build:
 	@echo ">> building $(IMAGE):$(VERSION)-$(DIRNAME)$(SUFFIX)"
 	@docker build -t "$(IMAGE):$(VERSION)-$(DIRNAME)$(SUFFIX)" .
-	@docker tag "$(IMAGE):$(VERSION)-$(DIRNAME)$(SUFFIX)" "$(IMAGE):$(PARENTDIRNAME)-$(DIRNAME)$(SUFFIX)"
-	@docker save -o "$(IMAGE_DIR)/$(IMAGE_FILE)-$(VERSION)-$(DIRNAME)$(SUFFIX)" "$(IMAGE):$(VERSION)-$(DIRNAME)$(SUFFIX)"
+	@docker tag "$(IMAGE):$(VERSION)-$(DIRNAME)$(SUFFIX)" "$(IMAGE):$(VERSION)-$(DIRNAME)"
+	@docker save -o "$(IMAGE_DIR)/$(IMAGE_FILE)-$(VERSION)-$(DIRNAME)" "$(IMAGE):$(VERSION)-$(DIRNAME)"
 
 .PHONY: build
