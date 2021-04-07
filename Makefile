@@ -22,6 +22,7 @@ build:
 	@./build.sh "$(VERSION)" "$(VARIANTS)"
 
 tag:
+	docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-base" "$(REPOSITORY)/$(NAME):base"
 	docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-main" "$(REPOSITORY)/$(NAME):latest"
 	docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-main" "$(REPOSITORY)/$(NAME):main"
 	docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-main" "$(REPOSITORY)/$(NAME):arm"

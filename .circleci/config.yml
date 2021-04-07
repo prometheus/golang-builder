@@ -38,7 +38,7 @@ jobs:
         at: .
     - run: for i in docker-images/*; do docker load -i "$i" ; done
     - run: docker images
-    - run: make tag SUFFIX=
+    - run: make tag
     - run: docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
     - run: make push
 
