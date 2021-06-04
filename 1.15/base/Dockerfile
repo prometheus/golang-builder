@@ -21,9 +21,9 @@ RUN \
         && apt-get install -y --no-install-recommends nodejs yarn \
         && rm -rf /var/lib/apt/lists/*
 
-ENV GOLANG_VERSION 1.15.12
+ENV GOLANG_VERSION 1.15.13
 ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-ENV GOLANG_DOWNLOAD_SHA256 bbdb935699e0b24d90e2451346da76121b2412d30930eabcd80907c230d098b7
+ENV GOLANG_DOWNLOAD_SHA256 3d3beec5fc66659018e09f40abb7274b10794229ba7c1e8bdb7d8ca77b656a13
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
