@@ -1,3 +1,5 @@
+FROM goreleaser/goreleaser:v0.169.0 as goreleaser
+
 FROM        debian:buster
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
@@ -26,9 +28,9 @@ ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.
 ENV GOLANG_DOWNLOAD_SHA256 b12c23023b68de22f74c0524f10b753e7b08b1504cb7e417eccebdd3fae49061
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
-	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
-	&& tar -C /usr/local -xzf golang.tar.gz \
-	&& rm golang.tar.gz
+    && echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+    && tar -C /usr/local -xzf golang.tar.gz \
+    && rm golang.tar.gz
 
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
@@ -37,6 +39,8 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
 
 COPY rootfs /
+
+COPY --from=goreleaser /usr/local/bin/goreleaser /usr/local/bin/goreleaser
 
 VOLUME      /app
 WORKDIR     /app
