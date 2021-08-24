@@ -5,7 +5,11 @@ set -uo pipefail
 
 GITHUB_MAIL="${GITHUB_MAIL:-prometheus-team@googlegroups.com}"
 GITHUB_USER="${GITHUB_USER:-prombot}"
-BRANCH_NAME="bump_version"
+BRANCH_NAME="${BRANCH_NAME:-bump_version}"
+DEFAULT_BRANCH="${DEFAULT_BRANCH:-$(git remote show origin | awk -F': ' '$1 == "  HEAD branch" {print $2}')}"
+
+ORG="${ORG:-prometheus}"
+REPO="${REPO:-golang-builder}"
 
 # GITHUB_TOKEN required scope: repo.repo_public
 GITHUB_TOKEN="${GITHUB_TOKEN:-}"
@@ -18,11 +22,17 @@ if ! GO111MODULE=on go run ./cmd/builder-bumper; then
   exit 1
 fi
 
+## Internal functions
+github_api() {
+  local url
+  url="https://api.github.com/${1}"
+  shift 1
+  curl --retry 5 --silent --fail -u "${GITHUB_USER}:${GITHUB_TOKEN}" "${url}" "$@"
+}
+
 if [[ -n "$(git status --porcelain)" ]]; then
   # Check if a PR is already opened for the branch.
-  prLink=$(curl --show-error --silent \
-    -u "${GITHUB_USER}:${GITHUB_TOKEN}" \
-    "https://api.github.com/repos/prometheus/golang-builder/pulls?head=golang-builder:${BRANCH_NAME}" | jq '.[0].url')
+  prLink=$(github_api "repos/${ORG}/${REPO}/pulls?state=open&head=${ORG}:${BRANCH_NAME}" | jq '.[0].html_url')
   if [[ "${prLink}" != "null" ]]; then
     echo "Pull request already opened for ${BRANCH_NAME} branch: ${prLink}"
     echo "Either close it or merge it before running this script again!"
@@ -37,13 +47,12 @@ if [[ -n "$(git status --porcelain)" ]]; then
 
   # Delete the remote branch in case it was merged but not deleted.
   # stdout and stderr are redirected to /dev/null otherwise git-push could leak the token in the logs.
-  git push --quiet "https://${GITHUB_TOKEN}:@github.com/prometheus/golang-builder" ":${BRANCH_NAME}" 1>/dev/null 2>&1
-  if git push --quiet "https://${GITHUB_TOKEN}:@github.com/prometheus/golang-builder" --set-upstream "${BRANCH_NAME}" 1>/dev/null 2>&1; then
-    curl --show-error --silent \
-      -u "${GITHUB_USER}:${GITHUB_TOKEN}" \
+  git push --quiet "https://${GITHUB_TOKEN}:@github.com/${ORG}/${REPO}" ":${BRANCH_NAME}" 1>/dev/null 2>&1
+  if git push --quiet "https://${GITHUB_TOKEN}:@github.com/${ORG}/${REPO}" --set-upstream "${BRANCH_NAME}" 1>/dev/null 2>&1; then
+    post_json="$(printf '{"title":"Bump Go version","base":"%s","head":"%s","body":""}' "${DEFAULT_BRANCH}" "${BRANCH_NAME}")"
+    github_api "repos/${ORG}/${REPO}/pulls" \
       -X POST \
-      -d '{"title":"Bump Go version","base":"master","head":"'${BRANCH_NAME}'","body":""}' \
-      "https://api.github.com/repos/prometheus/golang-builder/pulls"
+      --data "${post_json}"
   else
     echo "Failed to push changes to ${BRANCH_NAME}!"
     exit 1
