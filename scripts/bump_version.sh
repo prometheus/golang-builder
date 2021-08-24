@@ -22,7 +22,7 @@ if [[ -n "$(git status --porcelain)" ]]; then
   # Check if a PR is already opened for the branch.
   prLink=$(curl --show-error --silent \
     -u "${GITHUB_USER}:${GITHUB_TOKEN}" \
-    "https://api.github.com/repos/prometheus/golang-builder/pulls?head=golang-builder:${BRANCH_NAME}" | jq '.[0].url')
+    "https://api.github.com/repos/prometheus/golang-builder/pulls?head=prometheus:${BRANCH_NAME}" | jq '.[0].url')
   if [[ "${prLink}" != "null" ]]; then
     echo "Pull request already opened for ${BRANCH_NAME} branch: ${prLink}"
     echo "Either close it or merge it before running this script again!"
