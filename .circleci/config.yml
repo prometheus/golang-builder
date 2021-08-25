@@ -4,7 +4,7 @@ version: 2.1
 executors:
   golang:
     docker:
-    - image: cimg/go:1.16
+    - image: cimg/go:1.17
 
 jobs:
   build:
@@ -57,8 +57,8 @@ workflows:
         matrix:
           parameters:
             version:
-            - "1.15"
             - "1.16"
+            - "1.17"
         filters:
           tags:
             only: /.*/
