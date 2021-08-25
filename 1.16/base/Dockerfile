@@ -8,13 +8,15 @@ RUN \
         && apt-get dist-upgrade -y \
         && apt-get install -y --no-install-recommends \
             build-essential \
+            bzr \
             ca-certificates \
             curl \
             git \
-            bzr \
             gnupg \
             libsnmp-dev \
             make \
+            unzip \
+            yamllint \
         && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
         && echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
         && curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - \
