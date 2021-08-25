@@ -76,12 +76,12 @@ func (g *goVersion) golangVersion() string {
 	if g.minor == 0 {
 		return g.Major()
 	}
-	return g.String()
+	return fmt.Sprintf("1.%d.%d", g.major, g.minor)
 }
 
 // String returns the full version string.
 func (g *goVersion) String() string {
-	return fmt.Sprintf("1.%d.%d", g.major, g.minor)
+	return g.golangVersion()
 }
 
 func (g *goVersion) less(o *goVersion) bool {
