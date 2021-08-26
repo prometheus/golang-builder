@@ -17,13 +17,14 @@ RUN \
             make \
             unzip \
             yamllint \
-        && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-        && echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
         && curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - \
-        && echo "deb https://deb.nodesource.com/node_14.x/ buster main" > /etc/apt/sources.list.d/nodesource.list \
+        && echo "deb https://deb.nodesource.com/node_16.x/ buster main" > /etc/apt/sources.list.d/nodesource.list \
         && apt-get update \
-        && apt-get install -y --no-install-recommends nodejs yarn \
-        && rm -rf /var/lib/apt/lists/*
+        && apt-get install -y --no-install-recommends nodejs \
+        && curl -s -f -L https://github.com/mikefarah/yq/releases/download/v4.12.0/yq_linux_amd64 -o "/bin/yq" \
+        && echo "8716766cb49ab9dd7df5622d80bb217b94a21d0f3d3dc3d074c3ec7a0c7f67ea /bin/yq" > /tmp/yq.sum \
+        && sha256sum -c /tmp/yq.sum \
+        && rm -rf /tmp/yq.sum /var/lib/apt/lists/*
 
 ENV GOLANG_VERSION 1.17
 ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
