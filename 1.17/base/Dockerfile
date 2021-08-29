@@ -24,6 +24,7 @@ RUN \
         && curl -s -f -L https://github.com/mikefarah/yq/releases/download/v4.12.0/yq_linux_amd64 -o "/bin/yq" \
         && echo "8716766cb49ab9dd7df5622d80bb217b94a21d0f3d3dc3d074c3ec7a0c7f67ea /bin/yq" > /tmp/yq.sum \
         && sha256sum -c /tmp/yq.sum \
+        && chmod  0755 /bin/yq \
         && rm -rf /tmp/yq.sum /var/lib/apt/lists/*
 
 ENV GOLANG_VERSION 1.17
