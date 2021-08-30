@@ -13,6 +13,7 @@ RUN \
             curl \
             git \
             gnupg \
+            jq \
             libsnmp-dev \
             make \
             unzip \
