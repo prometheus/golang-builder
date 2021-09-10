@@ -29,6 +29,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"golang.org/x/mod/semver"
 )
 
 var (
@@ -47,10 +48,11 @@ type goVersion struct {
 }
 
 func newGoVersion(v string) *goVersion {
-	m := versionRe.FindSubmatch([]byte(v))
-	if len(m) != 3 {
-		return nil
+	c := semver.Canonical("v" + v)
+	if c == "" {
+		log.Fatal("bad version: %s", v)
 	}
+	m := strings.Split(c, ".")
 	major, err := strconv.Atoi(string(m[1]))
 	if err != nil {
 		log.Fatal(err)
@@ -153,7 +155,7 @@ func (g *goVersion) getNextMajor() *goVersion {
 
 // getExactVersionFromDir reads the current Go version from a directory.
 func getExactVersionFromDir(d string) (*goVersion, error) {
-	re := regexp.MustCompile(fmt.Sprintf(`^\s*VERSION\s*:=\s*(%s.\d+)`, d))
+	re := regexp.MustCompile(fmt.Sprintf(`^\s*VERSION\s*:=\s*(%s(.\d+)?)`, d))
 	f, err := os.Open(filepath.Join(d, "Makefile.COMMON"))
 	if err != nil {
 		return nil, err
