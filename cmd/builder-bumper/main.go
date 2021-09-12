@@ -50,7 +50,7 @@ type goVersion struct {
 func newGoVersion(v string) *goVersion {
 	c := semver.Canonical("v" + v)
 	if c == "" {
-		log.Fatal("bad version: %s", v)
+		log.Fatal(fmt.Sprintf("bad version: %s", v))
 	}
 	m := strings.Split(c, ".")
 	major, err := strconv.Atoi(string(m[1]))
