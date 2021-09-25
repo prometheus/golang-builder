@@ -18,6 +18,7 @@ RUN \
             make \
             unzip \
             yamllint \
+            openssh-client \
         && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
         && echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
         && curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - \
