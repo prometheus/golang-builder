@@ -1,4 +1,4 @@
-FROM goreleaser/goreleaser:v0.169.0 as goreleaser
+FROM goreleaser/goreleaser:v0.183.0 as goreleaser
 
 FROM        debian:buster
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
@@ -19,13 +19,15 @@ RUN \
             unzip \
             yamllint \
             openssh-client \
-        && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-        && echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
         && curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - \
-        && echo "deb https://deb.nodesource.com/node_14.x/ buster main" > /etc/apt/sources.list.d/nodesource.list \
+        && echo "deb https://deb.nodesource.com/node_16.x/ buster main" > /etc/apt/sources.list.d/nodesource.list \
         && apt-get update \
-        && apt-get install -y --no-install-recommends nodejs yarn \
-        && rm -rf /var/lib/apt/lists/*
+        && apt-get install -y --no-install-recommends nodejs \
+        && curl -s -f -L https://github.com/mikefarah/yq/releases/download/v4.13.5/yq_linux_amd64 -o "/bin/yq" \
+        && echo "244a3e37b0c23c70574c5b50937222dd37b785974c2b9a9abe0d31db190c9eea /bin/yq" > /tmp/yq.sum \
+        && sha256sum -c /tmp/yq.sum \
+        && chmod  0755 /bin/yq \
+        && rm -rf /tmp/yq.sum /var/lib/apt/lists/*
 
 ENV GOLANG_VERSION 1.16.9
 ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz

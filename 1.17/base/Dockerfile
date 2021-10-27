@@ -1,4 +1,4 @@
-FROM goreleaser/goreleaser:v0.169.0 as goreleaser
+FROM goreleaser/goreleaser:v0.183.0 as goreleaser
 
 FROM        debian:buster
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
@@ -23,8 +23,8 @@ RUN \
         && echo "deb https://deb.nodesource.com/node_16.x/ buster main" > /etc/apt/sources.list.d/nodesource.list \
         && apt-get update \
         && apt-get install -y --no-install-recommends nodejs \
-        && curl -s -f -L https://github.com/mikefarah/yq/releases/download/v4.12.0/yq_linux_amd64 -o "/bin/yq" \
-        && echo "8716766cb49ab9dd7df5622d80bb217b94a21d0f3d3dc3d074c3ec7a0c7f67ea /bin/yq" > /tmp/yq.sum \
+        && curl -s -f -L https://github.com/mikefarah/yq/releases/download/v4.13.5/yq_linux_amd64 -o "/bin/yq" \
+        && echo "244a3e37b0c23c70574c5b50937222dd37b785974c2b9a9abe0d31db190c9eea /bin/yq" > /tmp/yq.sum \
         && sha256sum -c /tmp/yq.sum \
         && chmod  0755 /bin/yq \
         && rm -rf /tmp/yq.sum /var/lib/apt/lists/*
