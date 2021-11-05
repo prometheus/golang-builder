@@ -5,10 +5,13 @@ executors:
   golang:
     docker:
     - image: cimg/go:1.17
+  vm:
+    machine:
+      image: ubuntu-2004:202010-01
 
 jobs:
   build:
-    executor: golang
+    executor: vm
 
     parameters:
       version:
@@ -16,7 +19,6 @@ jobs:
 
     steps:
     - checkout
-    - setup_remote_docker
     - run: docker info
     - run: make VARIANTS=base VERSION=<< parameters.version >>
     - run: make VARIANTS=main VERSION=<< parameters.version >>
