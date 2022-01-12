@@ -48,6 +48,11 @@ COPY rootfs /
 
 COPY --from=goreleaser /usr/local/bin/goreleaser /usr/local/bin/goreleaser
 
+RUN curl -s -f -L https://github.com/gotestyourself/gotestsum/releases/download/v1.7.0/gotestsum_1.7.0_linux_amd64.tar.gz -o gotestsum.tar.gz \
+    && echo "b5c98cc408c75e76a097354d9487dca114996e821b3af29a0442aa6c9159bd40 gotestsum.tar.gz" | sha256sum -c - \
+    && tar -C /usr/local -xzf gotestsum.tar.gz gotestsum \
+    && rm gotestsum.tar.gz
+
 VOLUME      /app
 WORKDIR     /app
 ENTRYPOINT  ["/builder.sh"]
