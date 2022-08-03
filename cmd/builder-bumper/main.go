@@ -280,8 +280,8 @@ func replaceMajor(old, current, next *goVersion) error {
 		[]func(string) (string, error){
 			fullVersionReplacer(current, next),
 			majorVersionReplacer(current, next),
-			majorVersionReplacer(old, current),
 			fullVersionReplacer(old, current),
+			majorVersionReplacer(old, current),
 		},
 	)
 }
