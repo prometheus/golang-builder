@@ -1,4 +1,4 @@
-FROM        quay.io/prometheus/golang-builder:1.17-base
+FROM        quay.io/prometheus/golang-builder:1.19-base
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 RUN \
