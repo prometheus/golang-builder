@@ -1,8 +1,8 @@
 module github.com/prometheus/golang-builder
 
-go 1.12
+go 1.18
 
 require (
-	github.com/pkg/errors v0.8.1
-	golang.org/x/mod v0.5.0 // indirect
+	github.com/pkg/errors v0.9.1
+	golang.org/x/mod v0.7.0
 )
