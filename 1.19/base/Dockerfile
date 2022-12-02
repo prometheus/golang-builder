@@ -1,4 +1,4 @@
-FROM goreleaser/goreleaser:v0.184.0 as goreleaser
+FROM goreleaser/goreleaser:v1.13.1 as goreleaser
 
 FROM        debian:bullseye
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
@@ -23,8 +23,8 @@ RUN \
         && echo "deb https://deb.nodesource.com/node_16.x/ bullseye main" > /etc/apt/sources.list.d/nodesource.list \
         && apt-get update \
         && apt-get install -y --no-install-recommends nodejs \
-        && curl -s -f -L https://github.com/mikefarah/yq/releases/download/v4.13.5/yq_linux_amd64 -o "/bin/yq" \
-        && echo "244a3e37b0c23c70574c5b50937222dd37b785974c2b9a9abe0d31db190c9eea /bin/yq" > /tmp/yq.sum \
+        && curl -s -f -L https://github.com/mikefarah/yq/releases/download/v4.30.5/yq_linux_amd64 -o "/bin/yq" \
+        && echo "813d7d5b16a627a1fbbd763cb508fc8f143122f8f7195c872e7367d6295a331a /bin/yq" > /tmp/yq.sum \
         && sha256sum -c /tmp/yq.sum \
         && chmod  0755 /bin/yq \
         && rm -rf /tmp/yq.sum /var/lib/apt/lists/*
@@ -46,7 +46,7 @@ WORKDIR $GOPATH
 
 COPY rootfs /
 
-COPY --from=goreleaser /usr/local/bin/goreleaser /usr/local/bin/goreleaser
+COPY --from=goreleaser /usr/bin/goreleaser /usr/bin/goreleaser
 
 RUN curl -s -f -L https://github.com/gotestyourself/gotestsum/releases/download/v1.7.0/gotestsum_1.7.0_linux_amd64.tar.gz -o gotestsum.tar.gz \
     && echo "b5c98cc408c75e76a097354d9487dca114996e821b3af29a0442aa6c9159bd40 gotestsum.tar.gz" | sha256sum -c - \

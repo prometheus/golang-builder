@@ -18,7 +18,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -50,7 +50,7 @@ type goVersion struct {
 func newGoVersion(v string) *goVersion {
 	c := semver.Canonical("v" + v)
 	if c == "" {
-		log.Fatal(fmt.Sprintf("bad version: %s", v))
+		log.Fatalf("bad version: %s", v)
 	}
 	m := strings.Split(c, ".")
 	major, err := strconv.Atoi(string(m[1]))
@@ -109,7 +109,7 @@ func (g *goVersion) getSHA256() (string, error) {
 		return "", err
 	}
 	defer resp.Body.Close()
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
@@ -174,7 +174,7 @@ func getExactVersionFromDir(d string) (*goVersion, error) {
 }
 
 func replace(filename string, replacers []func(string) (string, error)) error {
-	b, err := ioutil.ReadFile(filename)
+	b, err := os.ReadFile(filename)
 	if err != nil {
 		return err
 	}
@@ -185,7 +185,7 @@ func replace(filename string, replacers []func(string) (string, error)) error {
 			return err
 		}
 	}
-	return ioutil.WriteFile(filename, []byte(out), 0644)
+	return os.WriteFile(filename, []byte(out), 0644)
 }
 
 func shaReplacer(old, new *goVersion) func(string) (string, error) {
@@ -349,7 +349,7 @@ func main() {
 
 func run() error {
 	dirs := make([]string, 0)
-	files, err := ioutil.ReadDir(".")
+	files, err := os.ReadDir(".")
 	if err != nil {
 		return err
 	}
