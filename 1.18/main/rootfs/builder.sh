@@ -55,6 +55,7 @@ do
         mips64le) cc='mips64el-linux-gnuabi64-gcc' cxx='mips64el-linux-gnuabi64-g++' ;;
         ppc64) cc='powerpc-linux-gnu-gcc' cxx='powerpc-linux-gnu-g++' ;;
         ppc64le) cc='powerpc64le-linux-gnu-gcc' cxx='powerpc64le-linux-gnu-g++' ;;
+        riscv64) cc='riscv64-linux-gnu-gcc' cxx='riscv64-linux-gnu-g++' ;;
         s390x) cc='gcc-s390x-linux-gnu' cxx='g++-s390x-linux-gnu' ;;
       esac
       ;;
