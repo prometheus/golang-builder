@@ -22,6 +22,8 @@ RUN \
         crossbuild-essential-powerpc linux-libc-dev-powerpc-cross \
         crossbuild-essential-ppc64el linux-libc-dev-ppc64el-cross \
         crossbuild-essential-s390x linux-libc-dev-s390x-cross \
+        gcc-riscv64-linux-gnu g++-riscv64-linux-gnu libc6-dev-riscv64-cross\
+        libc6-riscv64-cross linux-libc-dev-riscv64-cross\
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /tmp/osxcross
 
