@@ -19,6 +19,7 @@ RUN \
             unzip \
             yamllint \
             openssh-client \
+        && git config --global --add safe.directory "*" \
         && curl -s -f -L https://deb.nodesource.com/gpgkey/nodesource.gpg.key -o /etc/apt/trusted.gpg.d/nodesource.asc \
         && echo "deb https://deb.nodesource.com/node_16.x/ bullseye main" > /etc/apt/sources.list.d/nodesource.list \
         && apt-get update \
