@@ -30,9 +30,9 @@ RUN \
         && chmod  0755 /bin/yq \
         && rm -rf /tmp/yq.sum /var/lib/apt/lists/*
 
-ENV GOLANG_VERSION 1.19.5
+ENV GOLANG_VERSION 1.19.6
 ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-ENV GOLANG_DOWNLOAD_SHA256 36519702ae2fd573c9869461990ae550c8c0d955cd28d2827a6b159fda81ff95
+ENV GOLANG_DOWNLOAD_SHA256 e3410c676ced327aec928303fef11385702a5562fd19d9a1750d5a2979763c3d
 
 RUN curl -s -f -L "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
     && echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
