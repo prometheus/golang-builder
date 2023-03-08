@@ -7,7 +7,7 @@ executors:
     - image: cimg/go:1.20
   vm:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2204:current
 
 jobs:
   build:
