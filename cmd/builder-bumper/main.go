@@ -28,7 +28,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/pkg/errors"
 	"golang.org/x/mod/semver"
 )
 
@@ -170,7 +169,7 @@ func getExactVersionFromDir(d string) (*goVersion, error) {
 	if err := scanner.Err(); err != nil {
 		return nil, err
 	}
-	return nil, errors.Errorf("couldn't get exact version for %s", d)
+	return nil, fmt.Errorf("couldn't get exact version for %s", d)
 }
 
 func replace(filename string, replacers []func(string) (string, error)) error {
@@ -250,7 +249,7 @@ func replaceMajor(old, current, next *goVersion) error {
 		return err
 	}
 	if err := os.Rename(old.Major(), next.Major()); err != nil {
-		return errors.Wrap(err, "failed to create new version directory")
+		return fmt.Errorf("failed to create new version directory: %w", err)
 	}
 
 	// Update CircleCI.
@@ -291,7 +290,7 @@ func replaceMajor(old, current, next *goVersion) error {
 func updateNextMinor(dir string) (*goVersion, error) {
 	current, err := getExactVersionFromDir(dir)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to detect current version of %s", dir)
+		return nil, fmt.Errorf("failed to detect current version of %s: %w", dir, err)
 	}
 
 	next, err := current.getLastMinorVersion()
@@ -364,7 +363,7 @@ func run() error {
 	}
 
 	if len(dirs) != 2 {
-		return errors.Errorf("Expected 2 versions of Go but got %d\n", len(dirs))
+		return fmt.Errorf("Expected 2 versions of Go but got %d\n", len(dirs))
 	}
 
 	// Check if a new major Go version exists.
