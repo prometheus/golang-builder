@@ -74,7 +74,7 @@ func (g *goVersion) Major() string {
 // golangVersion returns the full version string but without the leading '.0'
 // for the initial revision of a major release.
 func (g *goVersion) golangVersion() string {
-	if g.minor == 0 {
+	if g.major < 21 && g.minor == 0 {
 		return g.Major()
 	}
 	return fmt.Sprintf("1.%d.%d", g.major, g.minor)
