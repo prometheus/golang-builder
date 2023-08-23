@@ -14,7 +14,7 @@
 REPOSITORY := quay.io/prometheus
 NAME       := golang-builder
 VARIANTS   ?= base main
-VERSION    ?= 1.20
+VERSION    ?= 1.21
 
 all: build
 
