@@ -208,9 +208,9 @@ func majorVersionReplacer(old, new *goVersion) func(string) (string, error) {
 	}
 }
 
-func golangVersionReplacer(old, new *goVersion) func(string) (string, error) {
+func golangVersionReplacer(prefix string, old, new *goVersion) func(string) (string, error) {
 	return func(out string) (string, error) {
-		return strings.ReplaceAll(out, old.golangVersion(), new.golangVersion()), nil
+		return strings.ReplaceAll(out, prefix+old.golangVersion(), prefix+new.golangVersion()), nil
 	}
 }
 
@@ -237,11 +237,18 @@ func replaceMajor(old, current, next *goVersion) error {
 				},
 			)
 		}
+		if info.Name() == "Dockerfile" {
+			return replace(path,
+				[]func(string) (string, error){
+					golangVersionReplacer("GOLANG_VERSION ", old, next),
+					shaReplacer(old, next),
+				},
+			)
+		}
 		return replace(path,
 			[]func(string) (string, error){
-				golangVersionReplacer(old, next),
+				golangVersionReplacer("", old, next),
 				majorVersionReplacer(old, next),
-				shaReplacer(old, next),
 			},
 		)
 	})
@@ -304,7 +311,7 @@ func updateNextMinor(dir string) (*goVersion, error) {
 
 	err = replace(filepath.Join(current.Major(), "base/Dockerfile"),
 		[]func(string) (string, error){
-			golangVersionReplacer(current, next),
+			golangVersionReplacer("GOLANG_VERSION ", current, next),
 			shaReplacer(current, next),
 		},
 	)
