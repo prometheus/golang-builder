@@ -3,6 +3,12 @@ FROM goreleaser/goreleaser:v1.19.2 as goreleaser
 FROM        debian:bullseye
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
+COPY download.sh /bin/download.sh
+
+ENV YQ_VERSION 4.13.5
+ENV YQ_URL https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64
+ENV YQ_SUM 244a3e37b0c23c70574c5b50937222dd37b785974c2b9a9abe0d31db190c9eea
+
 RUN \
     apt-get update \
         && apt-get full-upgrade -y \
@@ -24,20 +30,18 @@ RUN \
         && echo "deb https://deb.nodesource.com/node_16.x/ bullseye main" > /etc/apt/sources.list.d/nodesource.list \
         && apt-get update \
         && apt-get install -y --no-install-recommends nodejs \
-        && curl -s -f -L https://github.com/mikefarah/yq/releases/download/v4.34.2/yq_linux_amd64 -o "/bin/yq" \
-        && echo "1952f93323e871700325a70610d2b33bafae5fe68e6eb4aec0621214f39a4c1e /bin/yq" > /tmp/yq.sum \
-        && sha256sum -c /tmp/yq.sum \
+        && yq_file=$(/bin/download.sh ${YQ_URL} ${YQ_SUM}) \
+        && mv -v ${yq_file} /bin/yq \
         && chmod  0755 /bin/yq \
-        && rm -rf /tmp/yq.sum /var/lib/apt/lists/*
+        && rm -rf /var/lib/apt/lists/*
 
 ENV GOLANG_VERSION 1.20.7
-ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
+ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz
 ENV GOLANG_DOWNLOAD_SHA256 f0a87f1bcae91c4b69f8dc2bc6d7e6bfcd7524fceec130af525058c0c17b1b44
 
-RUN curl -s -f -L "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
-    && echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
-    && tar -C /usr/local -xzf golang.tar.gz \
-    && rm golang.tar.gz
+RUN go_file=$(/bin/download.sh ${GOLANG_DOWNLOAD_URL} ${GOLANG_DOWNLOAD_SHA256}) \
+    && tar -C /usr/local -xzf ${go_file} \
+    && rm -v ${go_file}
 
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
@@ -49,10 +53,13 @@ COPY rootfs /
 
 COPY --from=goreleaser /usr/bin/goreleaser /usr/bin/goreleaser
 
-RUN curl -s -f -L https://github.com/gotestyourself/gotestsum/releases/download/v1.10.1/gotestsum_1.10.1_linux_amd64.tar.gz -o gotestsum.tar.gz \
-    && echo "44be2c02d4cf99cdd61edcb27851ef98ef8724a2ae3355b438bd108e9abb9056 gotestsum.tar.gz" | sha256sum -c - \
-    && tar -C /usr/local -xzf gotestsum.tar.gz gotestsum \
-    && rm gotestsum.tar.gz
+ENV GOTESTSUM_VERSION 1.7.0
+ENV GOTESTSUM_URL https://github.com/gotestyourself/gotestsum/releases/download/v${GOTESTSUM_VERSION}/gotestsum_${GOTESTSUM_VERSION}_linux_amd64.tar.gz
+ENV GOTESTSUM_SUM b5c98cc408c75e76a097354d9487dca114996e821b3af29a0442aa6c9159bd40
+
+RUN gotestsum_file=$(/bin/download.sh ${GOTESTSUM_URL} ${GOTESTSUM_SUM}) \
+    && tar -C /usr/local -xzf ${gotestsum_file} gotestsum \
+    && rm ${gotestsum_file}
 
 VOLUME      /app
 WORKDIR     /app
