@@ -1,13 +1,13 @@
-FROM goreleaser/goreleaser:v1.19.2 as goreleaser
+FROM goreleaser/goreleaser:v1.20.0 as goreleaser
 
-FROM        debian:bullseye
+FROM        debian:bookworm
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 COPY download.sh /bin/download.sh
 
-ENV YQ_VERSION 4.13.5
+ENV YQ_VERSION 4.35.1
 ENV YQ_URL https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64
-ENV YQ_SUM 244a3e37b0c23c70574c5b50937222dd37b785974c2b9a9abe0d31db190c9eea
+ENV YQ_SUM bd695a6513f1196aeda17b174a15e9c351843fb1cef5f9be0af170f2dd744f08
 
 RUN \
     apt-get update \
@@ -27,7 +27,7 @@ RUN \
             openssh-client \
         && git config --system --add safe.directory "*" \
         && curl -s -f -L https://deb.nodesource.com/gpgkey/nodesource.gpg.key -o /etc/apt/trusted.gpg.d/nodesource.asc \
-        && echo "deb https://deb.nodesource.com/node_16.x/ bullseye main" > /etc/apt/sources.list.d/nodesource.list \
+        && echo "deb https://deb.nodesource.com/node_20.x/ bookworm main" > /etc/apt/sources.list.d/nodesource.list \
         && apt-get update \
         && apt-get install -y --no-install-recommends nodejs \
         && yq_file=$(/bin/download.sh ${YQ_URL} ${YQ_SUM}) \
