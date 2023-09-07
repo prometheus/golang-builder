@@ -7,16 +7,16 @@
 
 Docker Builder Image for cross-building Golang Prometheus projects.
 
-- `latest`, `main`, `1.21.0-main`, `1.21.0-main` ([1.21.0/main/Dockerfile](1.21.0/main/Dockerfile))
-- `arm`, `1.21.0-arm`, `1.21.0-arm` ([1.21.0/arm/Dockerfile](1.21.0/arm/Dockerfile))
-- `powerpc`, `1.21.0-powerpc`, `1.21.0-powerpc` ([1.21.0/powerpc/Dockerfile](1.21.0/powerpc/Dockerfile))
-- `mips`, `1.21.0-mips`, `1.21.0-mips` ([1.21.0/mips/Dockerfile](1.21.0/mips/Dockerfile))
-- `s390x`, `1.21.0-s390x`, `1.21.0-s390x` ([1.21.0/s390x/Dockerfile](1.21.0/s390x/Dockerfile))
-- `1.20-main`, `1.20.7-main` ([1.20/main/Dockerfile](1.20/main/Dockerfile))
-- `arm`, `1.20-arm`, `1.20.7-arm` ([1.20/arm/Dockerfile](1.20/arm/Dockerfile))
-- `powerpc`, `1.20-powerpc`, `1.20.7-powerpc` ([1.20/powerpc/Dockerfile](1.20/powerpc/Dockerfile))
-- `mips`, `1.20-mips`, `1.20.7-mips` ([1.20/mips/Dockerfile](1.20/mips/Dockerfile))
-- `s390x`, `1.20-s390x`, `1.20.7-s390x` ([1.20/s390x/Dockerfile](1.20/s390x/Dockerfile))
+- `latest`, `main`, `1.21.1-main`, `1.21.1-main` ([1.21.1/main/Dockerfile](1.21.1/main/Dockerfile))
+- `arm`, `1.21.1-arm`, `1.21.1-arm` ([1.21.1/arm/Dockerfile](1.21.1/arm/Dockerfile))
+- `powerpc`, `1.21.1-powerpc`, `1.21.1-powerpc` ([1.21.1/powerpc/Dockerfile](1.21.1/powerpc/Dockerfile))
+- `mips`, `1.21.1-mips`, `1.21.1-mips` ([1.21.1/mips/Dockerfile](1.21.1/mips/Dockerfile))
+- `s390x`, `1.21.1-s390x`, `1.21.1-s390x` ([1.21.1/s390x/Dockerfile](1.21.1/s390x/Dockerfile))
+- `1.20-main`, `1.20.8-main` ([1.20/main/Dockerfile](1.20/main/Dockerfile))
+- `arm`, `1.20-arm`, `1.20.8-arm` ([1.20/arm/Dockerfile](1.20/arm/Dockerfile))
+- `powerpc`, `1.20-powerpc`, `1.20.8-powerpc` ([1.20/powerpc/Dockerfile](1.20/powerpc/Dockerfile))
+- `mips`, `1.20-mips`, `1.20.8-mips` ([1.20/mips/Dockerfile](1.20/mips/Dockerfile))
+- `s390x`, `1.20-s390x`, `1.20.8-s390x` ([1.20/s390x/Dockerfile](1.20/s390x/Dockerfile))
 
 ## Usage
 
