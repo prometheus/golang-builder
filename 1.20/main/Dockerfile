@@ -1,3 +1,7 @@
+FROM rust:latest as rustbuilder
+
+RUN cargo install --git https://github.com/indygreg/apple-platform-rs --branch main --bin rcodesign apple-codesign
+
 FROM        quay.io/prometheus/golang-builder:1.20-base
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
@@ -22,10 +26,12 @@ RUN \
         crossbuild-essential-powerpc linux-libc-dev-powerpc-cross \
         crossbuild-essential-ppc64el linux-libc-dev-ppc64el-cross \
         crossbuild-essential-s390x linux-libc-dev-s390x-cross \
-        gcc-riscv64-linux-gnu g++-riscv64-linux-gnu libc6-dev-riscv64-cross\
-        libc6-riscv64-cross linux-libc-dev-riscv64-cross\
+        gcc-riscv64-linux-gnu g++-riscv64-linux-gnu libc6-dev-riscv64-cross \
+        libc6-riscv64-cross linux-libc-dev-riscv64-cross \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /tmp/osxcross
+    
+COPY --from=rustbuilder /usr/local/cargo/bin/rcodesign /usr/local/bin/rcodesign
 
 ARG PROM_OSX_SDK_URL
 ENV OSXCROSS_PATH=/usr/osxcross \
