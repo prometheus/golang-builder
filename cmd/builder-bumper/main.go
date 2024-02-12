@@ -42,8 +42,8 @@ func init() {
 }
 
 type goVersion struct {
-	major int
 	minor int
+	patch int
 }
 
 func newGoVersion(v string) *goVersion {
@@ -52,32 +52,32 @@ func newGoVersion(v string) *goVersion {
 		log.Fatalf("bad version: %s", v)
 	}
 	m := strings.Split(c, ".")
-	major, err := strconv.Atoi(string(m[1]))
+	minor, err := strconv.Atoi(string(m[1]))
 	if err != nil {
 		log.Fatal(err)
 	}
-	minor, err := strconv.Atoi(string(m[2]))
+	patch, err := strconv.Atoi(string(m[2]))
 	if err != nil {
 		log.Fatal(err)
 	}
 	return &goVersion{
-		major: major,
 		minor: minor,
+		patch: patch,
 	}
 }
 
-// major returns the version string without the minor version.
-func (g *goVersion) Major() string {
-	return fmt.Sprintf("1.%d", g.major)
+// Minor returns the version string without the patch version.
+func (g *goVersion) Minor() string {
+	return fmt.Sprintf("1.%d", g.minor)
 }
 
 // golangVersion returns the full version string but without the leading '.0'
-// for the initial revision of a major release.
+// for the initial revision of a minor release.
 func (g *goVersion) golangVersion() string {
-	if g.major < 21 && g.minor == 0 {
-		return g.Major()
+	if g.minor < 21 && g.patch == 0 {
+		return g.Minor()
 	}
-	return fmt.Sprintf("1.%d.%d", g.major, g.minor)
+	return fmt.Sprintf("1.%d.%d", g.minor, g.patch)
 }
 
 // String returns the full version string.
@@ -86,14 +86,14 @@ func (g *goVersion) String() string {
 }
 
 func (g *goVersion) less(o *goVersion) bool {
-	if g.major == o.major {
-		return g.minor < o.minor
+	if g.minor == o.minor {
+		return g.patch < o.patch
 	}
-	return g.major < o.major
+	return g.minor < o.minor
 }
 
 func (g *goVersion) equal(o *goVersion) bool {
-	return g.major == o.major && g.minor == o.minor
+	return g.minor == o.minor && g.patch == o.patch
 }
 
 // url returns the URL of the Go archive.
@@ -115,12 +115,12 @@ func (g *goVersion) getSHA256() (string, error) {
 	return strings.TrimSpace(string(b)), nil
 }
 
-// getLastMinorVersion returns the last minor version for a given Go version.
-func (g *goVersion) getLastMinorVersion() (*goVersion, error) {
+// getLastPatchVersion returns the last patch version for a given Go version.
+func (g *goVersion) getLastPatchVersion() (*goVersion, error) {
 	last := *g
 	for {
 		next := last
-		next.minor++
+		next.patch++
 		resp, err := http.Head(next.url())
 		if err != nil {
 			return nil, err
@@ -134,11 +134,11 @@ func (g *goVersion) getLastMinorVersion() (*goVersion, error) {
 	}
 }
 
-// getNextMajor returns the next Go major version for a given Go version.
+// getNextMinor returns the next Go minor version for a given Go version.
 // It returns nil if the current version is already the latest.
-func (g *goVersion) getNextMajor() *goVersion {
-	version := newGoVersion(g.Major() + ".0")
-	version.major++
+func (g *goVersion) getNextMinor() *goVersion {
+	version := newGoVersion(g.Minor() + ".0")
+	version.minor++
 
 	resp, err := http.Head(version.url())
 	if err != nil {
@@ -202,9 +202,9 @@ func shaReplacer(old, new *goVersion) func(string) (string, error) {
 	}
 }
 
-func majorVersionReplacer(old, new *goVersion) func(string) (string, error) {
+func minorVersionReplacer(old, new *goVersion) func(string) (string, error) {
 	return func(out string) (string, error) {
-		return strings.ReplaceAll(out, old.Major(), new.Major()), nil
+		return strings.ReplaceAll(out, old.Minor(), new.Minor()), nil
 	}
 }
 
@@ -220,10 +220,10 @@ func fullVersionReplacer(old, new *goVersion) func(string) (string, error) {
 	}
 }
 
-// replaceMajor switches the versions from [1.(N-1), 1.N] to [1.N, 1.(N+1)].
-func replaceMajor(old, current, next *goVersion) error {
+// replaceMinor switches the versions from [1.(N-1), 1.N] to [1.N, 1.(N+1)].
+func replaceMinor(old, current, next *goVersion) error {
 	// Replace the old version by the next one.
-	err := filepath.Walk(old.Major(), func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(old.Minor(), func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -248,22 +248,22 @@ func replaceMajor(old, current, next *goVersion) error {
 		return replace(path,
 			[]func(string) (string, error){
 				golangVersionReplacer("", old, next),
-				majorVersionReplacer(old, next),
+				minorVersionReplacer(old, next),
 			},
 		)
 	})
 	if err != nil {
 		return err
 	}
-	if err := os.Rename(old.Major(), next.Major()); err != nil {
+	if err := os.Rename(old.Minor(), next.Minor()); err != nil {
 		return fmt.Errorf("failed to create new version directory: %w", err)
 	}
 
 	// Update CircleCI.
 	err = replace(".circleci/config.yml",
 		[]func(string) (string, error){
-			majorVersionReplacer(current, next),
-			majorVersionReplacer(old, current),
+			minorVersionReplacer(current, next),
+			minorVersionReplacer(old, current),
 		},
 	)
 	if err != nil {
@@ -273,8 +273,8 @@ func replaceMajor(old, current, next *goVersion) error {
 	// Update Makefile.
 	err = replace("Makefile",
 		[]func(string) (string, error){
-			majorVersionReplacer(current, next),
-			majorVersionReplacer(old, current),
+			minorVersionReplacer(current, next),
+			minorVersionReplacer(old, current),
 		},
 	)
 	if err != nil {
@@ -285,22 +285,22 @@ func replaceMajor(old, current, next *goVersion) error {
 	return replace("README.md",
 		[]func(string) (string, error){
 			fullVersionReplacer(current, next),
-			majorVersionReplacer(current, next),
+			minorVersionReplacer(current, next),
 			fullVersionReplacer(old, current),
-			majorVersionReplacer(old, current),
+			minorVersionReplacer(old, current),
 		},
 	)
 }
 
-// updateNextMinor bumps the given directory to the next minor version.
+// updateNextPatch bumps the given directory to the next patch version.
 // It returns nil if no new version exists.
-func updateNextMinor(dir string) (*goVersion, error) {
+func updateNextPatch(dir string) (*goVersion, error) {
 	current, err := getExactVersionFromDir(dir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to detect current version of %s: %w", dir, err)
 	}
 
-	next, err := current.getLastMinorVersion()
+	next, err := current.getLastPatchVersion()
 	if err != nil {
 		return nil, err
 	}
@@ -309,7 +309,7 @@ func updateNextMinor(dir string) (*goVersion, error) {
 		return nil, nil
 	}
 
-	err = replace(filepath.Join(current.Major(), "base/Dockerfile"),
+	err = replace(filepath.Join(current.Minor(), "base/Dockerfile"),
 		[]func(string) (string, error){
 			golangVersionReplacer("GOLANG_VERSION ", current, next),
 			shaReplacer(current, next),
@@ -319,7 +319,7 @@ func updateNextMinor(dir string) (*goVersion, error) {
 		return nil, err
 	}
 
-	err = replace(filepath.Join(current.Major(), "Makefile.COMMON"),
+	err = replace(filepath.Join(current.Minor(), "Makefile.COMMON"),
 		[]func(string) (string, error){
 			fullVersionReplacer(current, next),
 		},
@@ -373,10 +373,10 @@ func run() error {
 		return fmt.Errorf("Expected 2 versions of Go but got %d\n", len(dirs))
 	}
 
-	// Check if a new major Go version exists.
+	// Check if a new minor Go version exists.
 	nexts := make([]*goVersion, 0)
-	if next := newGoVersion(dirs[1] + ".0").getNextMajor(); next != nil {
-		log.Printf("found a new major version of Go: %s", next)
+	if next := newGoVersion(dirs[1] + ".0").getNextMinor(); next != nil {
+		log.Printf("found a new minor version of Go: %s", next)
 		old, err := getExactVersionFromDir(dirs[0])
 		if err != nil {
 			return err
@@ -385,15 +385,15 @@ func run() error {
 		if err != nil {
 			return err
 		}
-		if err = replaceMajor(old, current, next); err != nil {
+		if err = replaceMinor(old, current, next); err != nil {
 			return err
 		}
 		nexts = append(nexts, next)
 	} else {
-		// Otherwise check for new minor versions.
+		// Otherwise check for new patch versions.
 		for _, d := range dirs {
 			log.Printf("processing %s", d)
-			next, err := updateNextMinor(d)
+			next, err := updateNextPatch(d)
 			if err != nil {
 				return err
 			}
