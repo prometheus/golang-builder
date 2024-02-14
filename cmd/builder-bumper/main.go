@@ -202,9 +202,9 @@ func shaReplacer(old, new *goVersion) func(string) (string, error) {
 	}
 }
 
-func majorVersionReplacer(old, new *goVersion) func(string) (string, error) {
+func majorVersionReplacer(prefix string, old, new *goVersion) func(string) (string, error) {
 	return func(out string) (string, error) {
-		return strings.ReplaceAll(out, old.Major(), new.Major()), nil
+		return strings.ReplaceAll(out, prefix+old.Major(), prefix+new.Major()), nil
 	}
 }
 
@@ -241,6 +241,7 @@ func replaceMajor(old, current, next *goVersion) error {
 			return replace(path,
 				[]func(string) (string, error){
 					golangVersionReplacer("GOLANG_VERSION ", old, next),
+					majorVersionReplacer("quay.io/prometheus/golang-builder:", old, next),
 					shaReplacer(old, next),
 				},
 			)
@@ -248,7 +249,7 @@ func replaceMajor(old, current, next *goVersion) error {
 		return replace(path,
 			[]func(string) (string, error){
 				golangVersionReplacer("", old, next),
-				majorVersionReplacer(old, next),
+				majorVersionReplacer("", old, next),
 			},
 		)
 	})
@@ -262,8 +263,8 @@ func replaceMajor(old, current, next *goVersion) error {
 	// Update CircleCI.
 	err = replace(".circleci/config.yml",
 		[]func(string) (string, error){
-			majorVersionReplacer(current, next),
-			majorVersionReplacer(old, current),
+			majorVersionReplacer("", current, next),
+			majorVersionReplacer("", old, current),
 		},
 	)
 	if err != nil {
@@ -273,8 +274,8 @@ func replaceMajor(old, current, next *goVersion) error {
 	// Update Makefile.
 	err = replace("Makefile",
 		[]func(string) (string, error){
-			majorVersionReplacer(current, next),
-			majorVersionReplacer(old, current),
+			majorVersionReplacer("", current, next),
+			majorVersionReplacer("", old, current),
 		},
 	)
 	if err != nil {
@@ -285,9 +286,9 @@ func replaceMajor(old, current, next *goVersion) error {
 	return replace("README.md",
 		[]func(string) (string, error){
 			fullVersionReplacer(current, next),
-			majorVersionReplacer(current, next),
+			majorVersionReplacer("", current, next),
 			fullVersionReplacer(old, current),
-			majorVersionReplacer(old, current),
+			majorVersionReplacer("", old, current),
 		},
 	)
 }
