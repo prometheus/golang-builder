@@ -35,9 +35,9 @@ RUN \
         && chmod  0755 /bin/yq \
         && rm -rf /var/lib/apt/lists/*
 
-ENV GOLANG_VERSION 1.22.10
+ENV GOLANG_VERSION 1.22.11
 ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz
-ENV GOLANG_DOWNLOAD_SHA256 736ce492a19d756a92719a6121226087ccd91b652ed5caec40ad6dbfb2252092
+ENV GOLANG_DOWNLOAD_SHA256 0fc88d966d33896384fbde56e9a8d80a305dc17a9f48f1832e061724b1719991
 
 RUN go_file=$(/bin/download.sh ${GOLANG_DOWNLOAD_URL} ${GOLANG_DOWNLOAD_SHA256}) \
     && tar -C /usr/local -xzf ${go_file} \
