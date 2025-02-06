@@ -26,8 +26,8 @@ RUN \
             yamllint \
             openssh-client \
         && git config --system --add safe.directory "*" \
-        && curl -s -f -L https://deb.nodesource.com/gpgkey/nodesource.gpg.key -o /etc/apt/trusted.gpg.d/nodesource.asc \
-        && echo "deb https://deb.nodesource.com/node_20.x/ bookworm main" > /etc/apt/sources.list.d/nodesource.list \
+        && curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh \
+        && bash nodesource_setup.sh \
         && apt-get update \
         && apt-get install -y --no-install-recommends nodejs \
         && yq_file=$(/bin/download.sh ${YQ_URL} ${YQ_SUM}) \
