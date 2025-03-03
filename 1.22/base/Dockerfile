@@ -1,13 +1,13 @@
-FROM goreleaser/goreleaser:v1.20.0 as goreleaser
+FROM goreleaser/goreleaser:v2.6.1 as goreleaser
 
 FROM        debian:bookworm
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 COPY download.sh /bin/download.sh
 
-ENV YQ_VERSION 4.35.1
+ENV YQ_VERSION 4.45.1
 ENV YQ_URL https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64
-ENV YQ_SUM bd695a6513f1196aeda17b174a15e9c351843fb1cef5f9be0af170f2dd744f08
+ENV YQ_SUM 654d2943ca1d3be2024089eb4f270f4070f491a0610481d128509b2834870049
 
 RUN \
     apt-get update \
@@ -26,8 +26,8 @@ RUN \
             yamllint \
             openssh-client \
         && git config --system --add safe.directory "*" \
-        && curl -s -f -L https://deb.nodesource.com/gpgkey/nodesource.gpg.key -o /etc/apt/trusted.gpg.d/nodesource.asc \
-        && echo "deb https://deb.nodesource.com/node_20.x/ bookworm main" > /etc/apt/sources.list.d/nodesource.list \
+        && curl -s -f -L https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key -o /etc/apt/nodesource.asc \
+        && echo "deb [signed-by=/etc/apt/nodesource.asc] https://deb.nodesource.com/node_22.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
         && apt-get update \
         && apt-get install -y --no-install-recommends nodejs \
         && yq_file=$(/bin/download.sh ${YQ_URL} ${YQ_SUM}) \
@@ -53,9 +53,9 @@ COPY rootfs /
 
 COPY --from=goreleaser /usr/bin/goreleaser /usr/bin/goreleaser
 
-ENV GOTESTSUM_VERSION 1.7.0
+ENV GOTESTSUM_VERSION 1.12.0
 ENV GOTESTSUM_URL https://github.com/gotestyourself/gotestsum/releases/download/v${GOTESTSUM_VERSION}/gotestsum_${GOTESTSUM_VERSION}_linux_amd64.tar.gz
-ENV GOTESTSUM_SUM b5c98cc408c75e76a097354d9487dca114996e821b3af29a0442aa6c9159bd40
+ENV GOTESTSUM_SUM a50939fcfdfbc052bf97ff074c7fd8bcde1745be4a365d12d79311c293f12ae7
 
 RUN gotestsum_file=$(/bin/download.sh ${GOTESTSUM_URL} ${GOTESTSUM_SUM}) \
     && tar -C /usr/local -xzf ${gotestsum_file} gotestsum \
