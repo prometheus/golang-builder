@@ -164,18 +164,20 @@ func (g *goVersion) getSHA256() (string, error) {
 // getLastMinorVersion returns the last minor version for a given Go version.
 // if no new minor version available, it will return the given Go version back.
 func (g *goVersion) getLastMinorVersion(availableVersions []goVersion) *goVersion {
-	last := *g
-	next := last
-	// let's check max 40 minor revisions for now before giving up
-	for next.minor < 40 {
-		next.minor++
-		for _, availableVersion := range availableVersions {
-			if next == availableVersion {
-				return &next
-			}
+	sort.Slice(availableVersions, func(i, j int) bool {
+		if availableVersions[i].major == availableVersions[j].major {
+			return availableVersions[i].minor < availableVersions[j].minor
+		}
+		return availableVersions[i].major < availableVersions[j].major
+	})
+
+	for _, availableVersion := range availableVersions {
+		if availableVersion.major == g.major && availableVersion.minor > g.minor {
+			return &availableVersion
 		}
 	}
-	return &last
+
+	return g
 }
 
 // getNextMajor returns the next Go major version for a given Go version.
