@@ -126,7 +126,6 @@ func fetchJSON(url string) ([]byte, error) {
 }
 
 func availableVersions() []goVersion {
-
 	const url = "https://go.dev/dl/?mode=json"
 
 	jsonData, err := fetchJSON(url)
@@ -139,9 +138,10 @@ func availableVersions() []goVersion {
 	if err := json.Unmarshal(jsonData, &availableVersionsJSON); err != nil {
 		fmt.Println("Error parsing JSON:", err)
 	}
+
 	for i := range availableVersionsJSON {
 		// remove "go" from a string like "go1.22.0"
-		newGoVersion := newGoVersion(strings.TrimLeft("go", availableVersionsJSON[i].Version))
+		newGoVersion := newGoVersion(strings.TrimLeft(availableVersionsJSON[i].Version, "go"))
 		availableVersions = append(availableVersions, *newGoVersion)
 	}
 	return availableVersions
