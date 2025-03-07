@@ -16,10 +16,14 @@ NAME       := golang-builder
 VARIANTS   ?= base main
 VERSION    ?= 1.24
 
-all: build
+all: build test-unit
 
 build:
 	@./build.sh "$(VERSION)" "$(VARIANTS)"
+
+.PHONY: test-unit
+test-unit:
+	go test ./... -v
 
 tag:
 	docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-base" "$(REPOSITORY)/$(NAME):base"
