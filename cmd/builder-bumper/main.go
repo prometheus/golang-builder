@@ -17,10 +17,11 @@ package main
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -32,9 +33,13 @@ import (
 	"golang.org/x/mod/semver"
 )
 
+const updatesURL = "https://go.dev/dl/?mode=json"
+
 var (
 	help      bool
 	versionRe *regexp.Regexp
+
+	logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 )
 
 func init() {
@@ -54,16 +59,19 @@ type VersionInfo struct {
 func newGoVersion(v string) *goVersion {
 	c := semver.Canonical("v" + v)
 	if c == "" {
-		log.Fatalf("bad version: %s", v)
+		logger.Error("couldn't parse semver", "version", v)
+		os.Exit(1)
 	}
 	m := strings.Split(c, ".")
 	major, err := strconv.Atoi(string(m[1]))
 	if err != nil {
-		log.Fatal(err)
+		logger.Error("error parsing major verison", "error", err)
+		os.Exit(1)
 	}
 	minor, err := strconv.Atoi(string(m[2]))
 	if err != nil {
-		log.Fatal(err)
+		logger.Error("error parsing minor verison", "error", err)
+		os.Exit(1)
 	}
 	return &goVersion{
 		major: major,
@@ -125,18 +133,19 @@ func fetchJSON(url string) ([]byte, error) {
 	return body, nil
 }
 
-func availableVersions() []goVersion {
-	const url = "https://go.dev/dl/?mode=json"
+func getAvailableVersions() []goVersion {
+	var availableVersions []goVersion
 
-	jsonData, err := fetchJSON(url)
+	jsonData, err := fetchJSON(updatesURL)
 	if err != nil {
-		fmt.Println("Error fetching JSON:", err)
+		logger.Error("Error fetching JSON", "error", err)
+		return availableVersions
 	}
 
 	var availableVersionsJSON []VersionInfo
-	var availableVersions []goVersion
 	if err := json.Unmarshal(jsonData, &availableVersionsJSON); err != nil {
-		fmt.Println("Error parsing JSON:", err)
+		logger.Error("Error parsing JSON", "error", err)
+		return availableVersions
 	}
 
 	for i := range availableVersionsJSON {
@@ -144,6 +153,7 @@ func availableVersions() []goVersion {
 		newGoVersion := newGoVersion(strings.TrimLeft(availableVersionsJSON[i].Version, "go"))
 		availableVersions = append(availableVersions, *newGoVersion)
 	}
+	logger.Info("found available versions", "num", len(availableVersions), "versions", availableVersions)
 	return availableVersions
 }
 
@@ -337,16 +347,16 @@ func replaceMajor(old, current, next *goVersion) error {
 
 // updateNextMinor bumps the given directory to the next minor version.
 // It returns nil if no new version exists.
-func updateNextMinor(dir string) (*goVersion, error) {
+func updateNextMinor(dir string, availableVersions []goVersion) (*goVersion, error) {
 	current, err := getExactVersionFromDir(dir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to detect current version of %s: %w", dir, err)
 	}
 
-	next := current.getLastMinorVersion(availableVersions())
+	next := current.getLastMinorVersion(availableVersions)
 
 	if next.equal(current) {
-		log.Printf("no version change for Go %s", next.golangVersion())
+		logger.Info("no version change for Go", "version", next.golangVersion())
 		return nil, nil
 	}
 
@@ -378,19 +388,20 @@ func updateNextMinor(dir string) (*goVersion, error) {
 		return nil, err
 	}
 
-	log.Printf("updated from %s to %s", current, next)
+	logger.Info("updated version", "current", current, "next", next)
 	return next, nil
 }
 
 func main() {
 	flag.Parse()
 	if help {
-		log.Print("Bump Go versions in github.com/prometheus/golang-builder.")
+		logger.Info("Bump Go versions in github.com/prometheus/golang-builder.")
 		flag.PrintDefaults()
 		os.Exit(0)
 	}
 	if err := run(); err != nil {
-		log.Fatal(err)
+		logger.Error("update run failed", "error", err)
+		os.Exit(1)
 	}
 }
 
@@ -415,12 +426,16 @@ func run() error {
 	}
 
 	// Get list of available versions
-	availableVersions := availableVersions()
+	availableVersions := getAvailableVersions()
+	if len(availableVersions) == 0 {
+		logger.Error("failed to fetch avilable versions from update URL", "url", updatesURL)
+		return errors.New("failed to fetch available versions")
+	}
 
 	// Check if a new major Go version exists.
 	nexts := make([]*goVersion, 0)
 	if next := newGoVersion(dirs[1] + ".0").getNextMajor(availableVersions); next != nil {
-		log.Printf("found a new major version of Go: %s", next)
+		logger.Info("found a new major version of Go", "version", next)
 		old, err := getExactVersionFromDir(dirs[0])
 		if err != nil {
 			return err
@@ -436,8 +451,8 @@ func run() error {
 	} else {
 		// Otherwise check for new minor versions.
 		for _, d := range dirs {
-			log.Printf("processing %s", d)
-			next, err := updateNextMinor(d)
+			logger.Info("processing version dir", "dir", d)
+			next, err := updateNextMinor(d, availableVersions)
 			if err != nil {
 				return err
 			}
@@ -458,9 +473,9 @@ func run() error {
 	for _, v := range nexts {
 		vs = append(vs, v.String())
 	}
-	log.Print("Run the following command to commit the changes:")
-	log.Printf("git checkout -b golang-%s", strings.Join(vs, "-"))
-	log.Printf("git commit . --no-edit --message \"Bump to Go %s\"", strings.Join(vs, " and "))
+	logger.Info("Run the following command to commit the changes:")
+	logger.Info(fmt.Sprintf("git checkout -b golang-%s", strings.Join(vs, "-")))
+	logger.Info(fmt.Sprintf("git commit . --no-edit --message \"Bump to Go %s\"", strings.Join(vs, " and ")))
 
 	return nil
 }

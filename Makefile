@@ -16,8 +16,10 @@ NAME       := golang-builder
 VARIANTS   ?= base main
 VERSION    ?= 1.24
 
+.PHONY: all
 all: build test-unit
 
+.PHONY: build
 build:
 	@./build.sh "$(VERSION)" "$(VARIANTS)"
 
@@ -25,6 +27,7 @@ build:
 test-unit:
 	go test ./... -v
 
+.PHONY: tag
 tag:
 	docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-base" "$(REPOSITORY)/$(NAME):base"
 	docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-main" "$(REPOSITORY)/$(NAME):latest"
@@ -34,7 +37,6 @@ tag:
 	docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-main" "$(REPOSITORY)/$(NAME):mips"
 	docker tag "$(REPOSITORY)/$(NAME):$(VERSION)-main" "$(REPOSITORY)/$(NAME):s390x"
 
+.PHONY: push
 push:
 	docker push -a "$(REPOSITORY)/$(NAME)"
-
-.PHONY: all build tag push
