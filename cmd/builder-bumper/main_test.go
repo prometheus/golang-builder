@@ -31,7 +31,7 @@ func TestNewGoVersion(t *testing.T) {
 
 func TestAvailableVersions(t *testing.T) {
 	t.Run("Test that available versions scan correctly removes 'go' prefix", func(t *testing.T) {
-		got := availableVersions()
+		got := getAvailableVersions()
 
 		if len(got) == 0 {
 			t.Fatalf("Expected some versions, got none")
