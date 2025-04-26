@@ -422,7 +422,7 @@ func run() error {
 	}
 
 	if len(dirs) != 2 {
-		return fmt.Errorf("Expected 2 versions of Go but got %d\n", len(dirs))
+		return fmt.Errorf("expected 2 versions of Go but got %d", len(dirs))
 	}
 
 	// Get list of available versions
