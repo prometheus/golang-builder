@@ -1,6 +1,6 @@
 FROM rust:latest as rustbuilder
 
-RUN cargo install --git https://github.com/indygreg/apple-platform-rs --branch main --bin rcodesign apple-codesign
+RUN cargo install --locked --git https://github.com/indygreg/apple-platform-rs --branch main --bin rcodesign apple-codesign
 
 FROM        quay.io/prometheus/golang-builder:1.25-base
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
