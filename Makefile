@@ -14,7 +14,7 @@
 REPOSITORY := quay.io/prometheus
 NAME       := golang-builder
 VARIANTS   ?= base main
-VERSION    ?= 1.25
+VERSION    ?= 1.26
 
 .PHONY: all
 all: build test-unit
