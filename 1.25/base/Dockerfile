@@ -1,13 +1,13 @@
-FROM goreleaser/goreleaser:v2.6.1 as goreleaser
+FROM goreleaser/goreleaser:v2.13.3 as goreleaser
 
 FROM        debian:trixie
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 COPY download.sh /bin/download.sh
 
-ENV YQ_VERSION 4.45.1
+ENV YQ_VERSION 4.52.2
 ENV YQ_URL https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64
-ENV YQ_SUM 654d2943ca1d3be2024089eb4f270f4070f491a0610481d128509b2834870049
+ENV YQ_SUM a74bd266990339e0c48a2103534aef692abf99f19390d12c2b0ce6830385c459
 
 RUN \
     apt-get update \
@@ -53,9 +53,9 @@ COPY rootfs /
 
 COPY --from=goreleaser /usr/bin/goreleaser /usr/bin/goreleaser
 
-ENV GOTESTSUM_VERSION 1.12.0
+ENV GOTESTSUM_VERSION 1.13.0
 ENV GOTESTSUM_URL https://github.com/gotestyourself/gotestsum/releases/download/v${GOTESTSUM_VERSION}/gotestsum_${GOTESTSUM_VERSION}_linux_amd64.tar.gz
-ENV GOTESTSUM_SUM a50939fcfdfbc052bf97ff074c7fd8bcde1745be4a365d12d79311c293f12ae7
+ENV GOTESTSUM_SUM 11ccddeaf708ef228889f9fe2f68291a75b27013ddfc3b18156e094f5f40e8ee
 
 RUN gotestsum_file=$(/bin/download.sh ${GOTESTSUM_URL} ${GOTESTSUM_SUM}) \
     && tar -C /usr/local -xzf ${gotestsum_file} gotestsum \
