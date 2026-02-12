@@ -1,6 +1,6 @@
 FROM goreleaser/goreleaser:v2.6.1 as goreleaser
 
-FROM        debian:trixie
+FROM        debian:bookworm
 MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
 
 COPY download.sh /bin/download.sh
