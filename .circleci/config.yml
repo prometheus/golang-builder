@@ -5,45 +5,8 @@ executors:
   golang:
     docker:
     - image: cimg/go:1.26
-  vm:
-    machine:
-      image: ubuntu-2204:current
 
 jobs:
-  build:
-    executor: vm
-
-    parameters:
-      version:
-        type: string
-
-    steps:
-    - checkout
-    - run: docker info
-    - run: make VARIANTS=base VERSION=<< parameters.version >>
-    - run: make VARIANTS=main VERSION=<< parameters.version >>
-    - run: docker images
-    - run: ls -l docker-images
-    - persist_to_workspace:
-        root: .
-        paths:
-        - docker-images
-
-
-  publish:
-    executor: golang
-
-    steps:
-    - checkout
-    - setup_remote_docker
-    - attach_workspace:
-        at: .
-    - run: for i in docker-images/*; do docker load -i "$i" ; done
-    - run: docker images
-    - run: make tag
-    - run: docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
-    - run: make push
-
   bump_version:
     executor: golang
 
@@ -53,24 +16,6 @@ jobs:
 
 workflows:
   version: 2
-  golang-builder:
-    jobs:
-    - build:
-        matrix:
-          parameters:
-            version:
-            - "1.25"
-            - "1.26"
-        filters:
-          tags:
-            only: /.*/
-    - publish:
-        context: org-context
-        requires:
-        - build
-        filters:
-          branches:
-            only: master
   nightly:
     triggers:
       - schedule:

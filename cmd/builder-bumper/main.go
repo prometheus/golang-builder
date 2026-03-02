@@ -313,7 +313,7 @@ func replaceMajor(old, current, next *goVersion) error {
 	}
 
 	// Update CircleCI.
-	err = replace(".circleci/config.yml",
+	err = replace(".github/workflows/ci.yml",
 		[]func(string) (string, error){
 			majorVersionReplacer("", current, next),
 			majorVersionReplacer("", old, current),

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2016 The Prometheus Authors
+# Copyright The Prometheus Authors
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -16,6 +16,11 @@
 set -e
 
 [ "$#" -lt 2 ] && echo "Missing args: $0 {VERSIONS} {VARIANTS}";
+
+if [[ -z "${PROM_OSX_SDK_URL}" ]]; then
+  echo "Missing PROM_OSX_SDK_URL env var"
+  exit 1
+fi
 
 versions=( $1 )
 variants=( $2 )
