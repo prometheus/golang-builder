@@ -1,5 +1,9 @@
-name: Pre-submit tests
+---
+name: CI
 on:
+  push:
+    branches: [master, 'release-*']
+    tags: ['v*']
   pull_request:
     paths:
       - "go.sum"
@@ -18,5 +22,58 @@ jobs:
     name: Run unit tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - run: make --always-make test-unit
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      PROM_OSX_SDK_URL: ${{ secrets.PROM_OSX_SDK_URL }}
+    strategy:
+      matrix:
+        go:
+          - "1.25"
+          - "1.26"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install Go
+        uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5 # v6.2.0
+        with:
+          go-version: ${{ matrix.go }}.x
+      - run: make VARIANTS=base VERSION=${{ matrix.go }}
+      - run: make VARIANTS=main VERSION=${{ matrix.go }}
+      - run: docker images
+      - run: ls -l docker-images
+      - uses: prometheus/promci@fc721ff8497a70a93a881cd552b71af7fb3a9d53 # v0.5.4
+      - uses: ./.github/promci/actions/save_artifacts
+        with:
+          directory: docker-images
+
+  publish_master:
+    name: Publish master branch artifacts
+    runs-on: ubuntu-latest
+    needs: [unit-tests, build]
+    if: |
+      (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
+      ||
+      (github.event_name == 'push' && github.event.ref == 'refs/heads/master')
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: prometheus/promci@fc721ff8497a70a93a881cd552b71af7fb3a9d53 # v0.5.4
+      - uses: ./.github/promci/actions/restore_artifacts
+      - name: Load images
+        run: |
+          for image in docker-images/* ; do
+            docker image load --input "${image}"
+          done
+      - run: docker images
+      - run: make tag
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.quay_io_login }}
+          password: ${{ secrets.quay_io_password }}
+      - run: make push
