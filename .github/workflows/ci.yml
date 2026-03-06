@@ -9,6 +9,9 @@ on:
       - "go.sum"
       - "go.mod"
       - "**.go"
+      - "*/Makefile.COMMON"
+      - "*/base/*"
+      - "*/main/*"
       - ".github/workflows/ci.yml"
 
 permissions:  # added using https://github.com/step-security/secure-repo
