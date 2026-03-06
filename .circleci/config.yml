@@ -1,29 +1,33 @@
 ---
+# Prometheus has switched to GitHub action.
+# Circle CI is not disabled repository-wise so that previous pull requests
+# continue working.
+# This file does not generate any CircleCI workflow.
+
 version: 2.1
 
 executors:
   golang:
     docker:
-    - image: cimg/go:1.26
+      - image: busybox
 
 jobs:
-  bump_version:
+  noopjob:
     executor: golang
 
     steps:
-    - checkout
-    - run: ./scripts/bump_version.sh
+      - run:
+          command: "true"
 
 workflows:
   version: 2
-  nightly:
+  golang-builder:
+    jobs:
+      - noopjob
     triggers:
       - schedule:
-          cron: "11 12 * * *"
+          cron: "0 0 30 2 *"
           filters:
             branches:
               only:
                 - master
-    jobs:
-    - bump_version:
-        context: org-context
