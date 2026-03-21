@@ -292,7 +292,7 @@ func replaceMajor(old, current, next *goVersion) error {
 		if info.Name() == "Dockerfile" {
 			return replace(path,
 				[]func(string) (string, error){
-					golangVersionReplacer("GOLANG_VERSION ", old, next),
+					golangVersionReplacer("GOLANG_VERSION=", old, next),
 					majorVersionReplacer("quay.io/prometheus/golang-builder:", old, next),
 					shaReplacer(old, next),
 				},
@@ -362,7 +362,7 @@ func updateNextMinor(dir string, availableVersions []goVersion) (*goVersion, err
 
 	err = replace(filepath.Join(current.Major(), "base/Dockerfile"),
 		[]func(string) (string, error){
-			golangVersionReplacer("GOLANG_VERSION ", current, next),
+			golangVersionReplacer("GOLANG_VERSION=", current, next),
 			shaReplacer(current, next),
 		},
 	)
