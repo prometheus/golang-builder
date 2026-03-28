@@ -1,6 +1,6 @@
 # Prometheus Golang builder Docker images
 
-[![CircleCI](https://circleci.com/gh/prometheus/golang-builder/tree/master.svg?style=shield)][circleci]
+[![Build Status](https://github.com/prometheus/golang-builder/actions/workflows/ci.yml/badge.svg)](https://github.com/prometheus/golang-builder/actions/workflows/ci.yml)
 [![Docker Repository on Quay.io](https://quay.io/repository/prometheus/golang-builder/status)][quayio]
 
 ## Details
