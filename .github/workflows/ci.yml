@@ -41,6 +41,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: prometheus/promci-setup@5af30ba8c199a91d6c04ebdc3c48e630e355f62d # v0.1.0
+        with:
+          clean-runner-disk: true
+          enable_go: false
       - name: Install Go
         uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5 # v6.2.0
         with:
@@ -49,8 +53,7 @@ jobs:
       - run: make VARIANTS=main VERSION=${{ matrix.go }}
       - run: docker images
       - run: ls -l docker-images
-      - uses: prometheus/promci@fc721ff8497a70a93a881cd552b71af7fb3a9d53 # v0.5.4
-      - uses: ./.github/promci/actions/save_artifacts
+      - uses: prometheus/promci-artifacts/save@f9a587dbc0b2c78a0c54f8ad1cde71ea29a4b76f # v0.1.0
         with:
           directory: docker-images
 
@@ -64,8 +67,7 @@ jobs:
       (github.event_name == 'push' && github.event.ref == 'refs/heads/master')
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: prometheus/promci@fc721ff8497a70a93a881cd552b71af7fb3a9d53 # v0.5.4
-      - uses: ./.github/promci/actions/restore_artifacts
+      - uses: prometheus/promci-artifacts/restore@f9a587dbc0b2c78a0c54f8ad1cde71ea29a4b76f # v0.1.0
       - name: Load images
         run: |
           for image in docker-images/* ; do
@@ -74,7 +76,7 @@ jobs:
       - run: docker images
       - run: make tag
       - name: Login to ghcr.io
-        uses: docker/login-action@v3
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
         with:
           registry: quay.io
           username: ${{ secrets.quay_io_login }}
