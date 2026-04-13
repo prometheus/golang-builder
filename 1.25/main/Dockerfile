@@ -1,9 +1,9 @@
-FROM rust:latest as rustbuilder
+FROM rust:latest AS rustbuilder
 
 RUN cargo install --locked --git https://github.com/indygreg/apple-platform-rs --branch main --bin rcodesign apple-codesign
 
 FROM        quay.io/prometheus/golang-builder:1.25-base
-MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
+LABEL       maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
 RUN \
     apt-get update && apt-get install -y --no-install-recommends \
@@ -51,6 +51,6 @@ RUN \
 
 WORKDIR /app
 
-ENV PATH $OSXCROSS_PATH/bin:$PATH
+ENV PATH=$OSXCROSS_PATH/bin:$PATH
 
 COPY rootfs /
