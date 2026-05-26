@@ -61,6 +61,14 @@ RUN gotestsum_file=$(/bin/download.sh ${GOTESTSUM_URL} ${GOTESTSUM_SUM}) \
     && tar -C /usr/local -xzf ${gotestsum_file} gotestsum \
     && rm ${gotestsum_file}
 
+ENV PNPM_VERSION=11.3.0
+ENV PNPM_URL=https://github.com/pnpm/pnpm/releases/download/v${PNPM_VERSION}/pnpm-linux-x64.tar.gz
+ENV PNPM_SUM=6eb506b53297eb1186ba0cbff1577bb26d17713835a01a5342dcafae550827ce
+
+RUN pnpm_file=$(/bin/download.sh ${PNPM_URL} ${PNPM_SUM}) \
+    && tar -C /usr/local/bin -xzf ${pnpm_file} pnpm \
+    && rm ${pnpm_file}
+
 VOLUME      /app
 WORKDIR     /app
 ENTRYPOINT  ["/builder.sh"]
