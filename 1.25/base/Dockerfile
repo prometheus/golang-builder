@@ -66,7 +66,9 @@ ENV PNPM_URL=https://github.com/pnpm/pnpm/releases/download/v${PNPM_VERSION}/pnp
 ENV PNPM_SUM=6eb506b53297eb1186ba0cbff1577bb26d17713835a01a5342dcafae550827ce
 
 RUN pnpm_file=$(/bin/download.sh ${PNPM_URL} ${PNPM_SUM}) \
-    && tar -C /usr/local/bin -xzf ${pnpm_file} pnpm \
+    && mkdir -p /usr/local/lib/pnpm \
+    && tar -C /usr/local/lib/pnpm -xzf ${pnpm_file} \
+    && ln -s /usr/local/lib/pnpm/pnpm /usr/local/bin/pnpm \
     && rm ${pnpm_file}
 
 VOLUME      /app
