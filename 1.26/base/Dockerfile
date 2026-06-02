@@ -44,7 +44,7 @@ RUN go_file=$(/bin/download.sh ${GOLANG_DOWNLOAD_URL} ${GOLANG_DOWNLOAD_SHA256})
     && rm -v ${go_file}
 
 ENV GOPATH=/go
-ENV PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
+ENV PATH=$GOPATH/bin:/usr/local/go/bin:/usr/local/lib/pnpm:$PATH
 
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
@@ -68,7 +68,6 @@ ENV PNPM_SUM=6eb506b53297eb1186ba0cbff1577bb26d17713835a01a5342dcafae550827ce
 RUN pnpm_file=$(/bin/download.sh ${PNPM_URL} ${PNPM_SUM}) \
     && mkdir -p /usr/local/lib/pnpm \
     && tar -C /usr/local/lib/pnpm -xzf ${pnpm_file} \
-    && ln -s /usr/local/lib/pnpm/pnpm /usr/local/bin/pnpm \
     && rm ${pnpm_file}
 
 VOLUME      /app
