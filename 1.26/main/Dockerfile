@@ -1,19 +1,13 @@
-FROM rust:latest AS rustbuilder
-
-RUN cargo install --locked --git https://github.com/indygreg/apple-platform-rs --branch main --bin rcodesign apple-codesign
-
 FROM        quay.io/prometheus/golang-builder:1.26-base
 LABEL       maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
+ENV ZIG_VERSION=0.14.0 \
+    ZIG_SHA256=473ec26806133cf4d1918caf1a410f8403a13d979726a9045b421b685031a982 \
+    MACOS_SDK_PATH=/usr/local/lib/macos-sdk
+
 RUN \
     apt-get update && apt-get install -y --no-install-recommends \
-        clang \
-        cmake \
-        libc6-dev \
-        libxml2-dev \
-        lzma-dev \
         mingw-w64 \
-        patch \
         xz-utils \
         crossbuild-essential-arm64 linux-libc-dev-arm64-cross \
         crossbuild-essential-armel linux-libc-dev-armel-cross \
@@ -29,28 +23,16 @@ RUN \
         gcc-riscv64-linux-gnu g++-riscv64-linux-gnu libc6-dev-riscv64-cross \
         libc6-riscv64-cross linux-libc-dev-riscv64-cross \
     && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /tmp/osxcross
-    
-COPY --from=rustbuilder /usr/local/cargo/bin/rcodesign /usr/local/bin/rcodesign
+    && mkdir -p /usr/local/lib/zig \
+    && tar -C /usr/local/lib/zig --strip-components=1 -xJf \
+       "$(/bin/download.sh "https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz" \
+          "${ZIG_SHA256}")" \
+    && ln -s /usr/local/lib/zig/zig /usr/local/bin/zig
 
-ARG PROM_OSX_SDK_URL
-ENV OSXCROSS_PATH=/usr/osxcross \
-    OSXCROSS_REV=ff8d100f3f026b4ffbe4ce96d8aac4ce06f1278b \
-    SDK_VERSION=14 \
-    DARWIN_VERSION=23 \
-    OSX_VERSION_MIN=10.13
-
-WORKDIR /tmp/osxcross
-RUN \
-    curl -s -f -L "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REV}" \
-      | tar -C /tmp/osxcross --strip=1 -xzf - \
-    && curl -s -f -L "${PROM_OSX_SDK_URL}/MacOSX${SDK_VERSION}.sdk.tar.xz" -o "tarballs/MacOSX${SDK_VERSION}.sdk.tar.xz" \
-    && UNATTENDED=yes JOBS=2 ./build.sh \
-    && mv target "${OSXCROSS_PATH}" \
-    && rm -rf /tmp/osxcross "/usr/osxcross/SDK/MacOSX${SDK_VERSION}.sdk/usr/share/man"
+COPY macos-sdk-bin/ /usr/local/lib/macos-sdk/bin/
+COPY macos-sdk/ /usr/local/lib/macos-sdk/
+RUN chmod +x /usr/local/lib/macos-sdk/bin/*
 
 WORKDIR /app
-
-ENV PATH=$OSXCROSS_PATH/bin:$PATH
 
 COPY rootfs /

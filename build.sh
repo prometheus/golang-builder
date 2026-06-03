@@ -17,11 +17,6 @@ set -e
 
 [ "$#" -lt 2 ] && echo "Missing args: $0 {VERSIONS} {VARIANTS}";
 
-if [[ -z "${PROM_OSX_SDK_URL}" ]]; then
-  echo "Missing PROM_OSX_SDK_URL env var"
-  exit 1
-fi
-
 versions=( $1 )
 variants=( $2 )
 

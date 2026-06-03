@@ -28,11 +28,40 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - run: make --always-make test-unit
 
+  extract-macos-sdk:
+    name: Extract macOS SDK
+    runs-on: macos-15
+    outputs:
+      sdk_version: ${{ steps.sdk.outputs.sdk_version }}
+    steps:
+      - name: Extract SDK files
+        id: sdk
+        run: |
+          SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+          SDK_VERSION="$(xcrun --sdk macosx --show-sdk-version)"
+          echo "sdk_version=${SDK_VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "Using SDK at ${SDKROOT} (version ${SDK_VERSION})"
+
+          mkdir -p sdk-files/Frameworks
+
+          cp -r "${SDKROOT}/usr/include" sdk-files/include
+          cp -r "${SDKROOT}/usr/lib" sdk-files/lib
+
+          for fw in CoreFoundation Foundation IOKit Security; do
+            cp -r "${SDKROOT}/System/Library/Frameworks/${fw}.framework" "sdk-files/Frameworks/${fw}.framework"
+          done
+
+      - name: Upload SDK artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: macos-sdk
+          path: sdk-files/
+          retention-days: 1
+
   build:
     name: Build
     runs-on: ubuntu-latest
-    env:
-      PROM_OSX_SDK_URL: ${{ secrets.PROM_OSX_SDK_URL }}
+    needs: [extract-macos-sdk]
     strategy:
       matrix:
         go:
@@ -50,6 +79,11 @@ jobs:
         with:
           go-version: ${{ matrix.go }}.x
       - run: make VARIANTS=base VERSION=${{ matrix.go }}
+      - name: Download macOS SDK artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: macos-sdk
+          path: ${{ matrix.go }}/main/macos-sdk/
       - run: make VARIANTS=main VERSION=${{ matrix.go }}
       - run: docker images
       - run: ls -l docker-images
