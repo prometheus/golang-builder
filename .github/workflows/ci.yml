@@ -33,6 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROM_OSX_SDK_URL: ${{ secrets.PROM_OSX_SDK_URL }}
+    if: github.repository_owner == 'prometheus'
     strategy:
       matrix:
         go:
