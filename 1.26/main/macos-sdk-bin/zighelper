@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+exec zig "$@" \
+    -target "${MACOS_TARGET}" \
+    -Wno-nullability-completeness \
+    -I "${MACOS_SDK_PATH}/include" \
+    -iframework "${MACOS_SDK_PATH}/Frameworks" \
+    -F "${MACOS_SDK_PATH}/Frameworks" \
+    -L "${MACOS_SDK_PATH}/lib"

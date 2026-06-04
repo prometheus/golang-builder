@@ -23,7 +23,7 @@ for goarch in "${goarchs[@]}"
 do
   goos=${goarch%%/*}
   arch=${goarch##*/}
-  goarm='' cc='gcc' cxx='g++' extra_args=''
+  goarm='' cc='gcc' cxx='g++' extra_args='' macos_path='' macos_target=''
 
   case "${goos}" in
     windows)
@@ -34,9 +34,11 @@ do
       ;;
     darwin)
       case "${arch}" in
-        amd64) cc='o64-clang' cxx='o64-clang++' extra_args='LD_LIBRARY_PATH=/usr/osxcross/lib' ;;
-        arm64) cc='oa64-clang' cxx='oa64-clang++' extra_args='LD_LIBRARY_PATH=/usr/osxcross/lib' ;;
+        amd64) macos_target='x86_64-macos.11.0' ;;
+        arm64) macos_target='aarch64-macos.11.0' ;;
       esac
+      cc='zighelper cc' cxx='zighelper c++'
+      macos_path="${MACOS_SDK_PATH}/bin:"
       ;;
     linux)
       case "${arch}" in
@@ -72,10 +74,10 @@ do
 
   echo "# Building with: CC='${cc}' CXX='${cxx}'"
   if [[ -n "${goarm}" ]]; then
-    CC="${cc}" CXX="${cxx}" GOOS="${goos}" GOARCH="${arch}" GOARM="${goarm}" \
+    PATH="${macos_path}${PATH}" MACOS_TARGET="${macos_target}" CC="${cc}" CXX="${cxx}" GOOS="${goos}" GOARCH="${arch}" GOARM="${goarm}" \
       make PREFIX="${prefix}" build ${extra_args}
   else
-    CC="${cc}" CXX="${cxx}" GOOS="${goos}" GOARCH="${arch}" \
+    PATH="${macos_path}${PATH}" MACOS_TARGET="${macos_target}" CC="${cc}" CXX="${cxx}" GOOS="${goos}" GOARCH="${arch}" \
       make PREFIX="${prefix}" build ${extra_args}
   fi
 done
