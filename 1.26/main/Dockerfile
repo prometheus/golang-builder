@@ -1,9 +1,9 @@
 FROM        quay.io/prometheus/golang-builder:1.26-base
 LABEL       maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
-ENV ZIG_VERSION=0.14.0 \
-    ZIG_SHA256=473ec26806133cf4d1918caf1a410f8403a13d979726a9045b421b685031a982 \
-    MACOS_SDK_PATH=/usr/local/lib/macos-sdk
+ENV ZIG_VERSION=0.14.0
+ENV ZIG_SHA256=473ec26806133cf4d1918caf1a410f8403a13d979726a9045b421b685031a982
+ENV MACOS_SDK_PATH=/usr/local/lib/macos-sdk
 
 RUN \
     apt-get update && apt-get install -y --no-install-recommends \
