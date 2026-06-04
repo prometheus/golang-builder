@@ -34,8 +34,8 @@ do
       ;;
     darwin)
       case "${arch}" in
-        amd64) macos_target='x86_64-macos.11.0' ;;
-        arm64) macos_target='aarch64-macos.11.0' ;;
+        amd64) macos_target='x86_64-macos.12.0' ;;
+        arm64) macos_target='aarch64-macos.12.0' ;;
       esac
       cc='zighelper cc' cxx='zighelper c++'
       macos_path="${MACOS_SDK_PATH}/bin:"

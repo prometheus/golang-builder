@@ -69,6 +69,17 @@ docker run --rm -ti -v $(pwd):/app quay.io/prometheus/golang-builder:mips \
     -p "linux/mips64 linux/mips64le"
 ```
 
+## Darwin/macOS CGO builds
+
+Darwin CGO cross-compilation uses [Zig](https://ziglang.org/) as the C compiler,
+combined with the macOS SDK provided by the GitHub-hosted macOS runner (the latest
+SDK available at image build time). Builds target macOS 12 (Monterey) and later,
+which is the [minimum version supported by Go](https://go.dev/wiki/Darwin).
+
+This is **not** a general-purpose macOS cross-compilation toolchain. It is scoped
+to the CGO surface needed by Prometheus ecosystem projects and may not support
+every CGO use case.
+
 ## Legal note
 
 OSX/Darwin/Apple builds:
