@@ -47,7 +47,7 @@ jobs:
           cp -r "${SDKROOT}/usr/include" sdk-files/include
           cp -r "${SDKROOT}/usr/lib" sdk-files/lib
 
-          for fw in CoreFoundation Foundation IOKit Security; do
+          for fw in CFNetwork CoreFoundation CoreGraphics CoreServices DiskArbitration Foundation IOKit Security; do
             cp -r "${SDKROOT}/System/Library/Frameworks/${fw}.framework" "sdk-files/Frameworks/${fw}.framework"
           done
 
