@@ -30,7 +30,7 @@ jobs:
 
   extract-macos-sdk:
     name: Extract macOS SDK
-    runs-on: macos-26
+    runs-on: macos-15
     outputs:
       sdk_version: ${{ steps.sdk.outputs.sdk_version }}
     steps:
