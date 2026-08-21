@@ -47,8 +47,8 @@ if [[ -n "$(git status --porcelain)" ]]; then
 
   # Delete the remote branch in case it was merged but not deleted.
   # stdout and stderr are redirected to /dev/null otherwise git-push could leak the token in the logs.
-  git push --quiet "https://${GITHUB_TOKEN}:@github.com/${ORG}/${REPO}" ":${BRANCH_NAME}" 1>/dev/null 2>&1
-  if git push --quiet "https://${GITHUB_TOKEN}:@github.com/${ORG}/${REPO}" --set-upstream "${BRANCH_NAME}" 1>/dev/null 2>&1; then
+  git push --quiet "https://x-access-token:${GITHUB_TOKEN}@github.com/${ORG}/${REPO}" ":${BRANCH_NAME}" 1>/dev/null 2>&1
+  if git push --quiet "https://x-access-token:${GITHUB_TOKEN}@github.com/${ORG}/${REPO}" --set-upstream "${BRANCH_NAME}" 1>/dev/null 2>&1; then
     post_json="$(printf '{"title":"Bump Go version","base":"%s","head":"%s","body":""}' "${DEFAULT_BRANCH}" "${BRANCH_NAME}")"
     github_api "repos/${ORG}/${REPO}/pulls" \
       -X POST \
