@@ -2,5 +2,5 @@
 # outside .github/workflows/ because the workflow GITHUB_TOKEN can not push
 # changes to workflow files.
 go:
-  - "1.25"
   - "1.26"
+  - "1.27"

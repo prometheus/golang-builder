@@ -1,4 +1,4 @@
-FROM        quay.io/prometheus/golang-builder:1.25-base
+FROM        quay.io/prometheus/golang-builder:1.27-base
 LABEL       maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
 ENV ZIG_VERSION=0.14.0
