@@ -312,8 +312,9 @@ func replaceMajor(old, current, next *goVersion) error {
 		return fmt.Errorf("failed to create new version directory: %w", err)
 	}
 
-	// Update CircleCI.
-	err = replace(".github/workflows/ci.yml",
+	// Update the CI build matrix. It lives outside .github/workflows/ because
+	// the workflow GITHUB_TOKEN can not push changes to workflow files.
+	err = replace(".ci-versions.yml",
 		[]func(string) (string, error){
 			majorVersionReplacer("", current, next),
 			majorVersionReplacer("", old, current),
