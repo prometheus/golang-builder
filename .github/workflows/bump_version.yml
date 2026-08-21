@@ -4,6 +4,7 @@ name: Check for new versions
 on:
   schedule:
     - cron: "11 12 * * *"
+  workflow_dispatch: {}
 
 
 permissions:
