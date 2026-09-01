@@ -100,7 +100,7 @@ jobs:
       - run: make VARIANTS=main VERSION=${{ matrix.go }}
       - run: docker images
       - run: ls -l docker-images
-      - uses: prometheus/promci-artifacts/save@f9a587dbc0b2c78a0c54f8ad1cde71ea29a4b76f # v0.1.0
+      - uses: prometheus/promci-artifacts/save@9ca3252d07f230d5f923452b4df5697eba4a5bee # v0.1.1
         with:
           directory: docker-images
 
@@ -114,7 +114,7 @@ jobs:
       (github.event_name == 'push' && github.event.ref == 'refs/heads/master')
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: prometheus/promci-artifacts/restore@f9a587dbc0b2c78a0c54f8ad1cde71ea29a4b76f # v0.1.0
+      - uses: prometheus/promci-artifacts/restore@9ca3252d07f230d5f923452b4df5697eba4a5bee # v0.1.1
       - name: Load images
         run: |
           for image in docker-images/* ; do
