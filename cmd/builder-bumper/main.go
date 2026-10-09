@@ -65,12 +65,12 @@ func newGoVersion(v string) *goVersion {
 	m := strings.Split(c, ".")
 	major, err := strconv.Atoi(string(m[1]))
 	if err != nil {
-		logger.Error("error parsing major verison", "error", err)
+		logger.Error("error parsing major version", "error", err)
 		os.Exit(1)
 	}
 	minor, err := strconv.Atoi(string(m[2]))
 	if err != nil {
-		logger.Error("error parsing minor verison", "error", err)
+		logger.Error("error parsing minor version", "error", err)
 		os.Exit(1)
 	}
 	return &goVersion{
@@ -236,15 +236,15 @@ func replace(filename string, replacers []func(string) (string, error)) error {
 			return err
 		}
 	}
-	return os.WriteFile(filename, []byte(out), 0644)
+	return os.WriteFile(filename, []byte(out), 0o644)
 }
 
-func shaReplacer(old, new *goVersion) func(string) (string, error) {
+func shaReplacer(old, next *goVersion) func(string) (string, error) {
 	oldSHA, err := old.getSHA256()
 	if err != nil {
 		return func(string) (string, error) { return "", err }
 	}
-	nextSHA, err := new.getSHA256()
+	nextSHA, err := next.getSHA256()
 	if err != nil {
 		return func(string) (string, error) { return "", err }
 	}
@@ -254,21 +254,21 @@ func shaReplacer(old, new *goVersion) func(string) (string, error) {
 	}
 }
 
-func majorVersionReplacer(prefix string, old, new *goVersion) func(string) (string, error) {
+func majorVersionReplacer(prefix string, old, next *goVersion) func(string) (string, error) {
 	return func(out string) (string, error) {
-		return strings.ReplaceAll(out, prefix+old.Major(), prefix+new.Major()), nil
+		return strings.ReplaceAll(out, prefix+old.Major(), prefix+next.Major()), nil
 	}
 }
 
-func golangVersionReplacer(prefix string, old, new *goVersion) func(string) (string, error) {
+func golangVersionReplacer(prefix string, old, next *goVersion) func(string) (string, error) {
 	return func(out string) (string, error) {
-		return strings.ReplaceAll(out, prefix+old.golangVersion(), prefix+new.golangVersion()), nil
+		return strings.ReplaceAll(out, prefix+old.golangVersion(), prefix+next.golangVersion()), nil
 	}
 }
 
-func fullVersionReplacer(old, new *goVersion) func(string) (string, error) {
+func fullVersionReplacer(old, next *goVersion) func(string) (string, error) {
 	return func(out string) (string, error) {
-		return strings.ReplaceAll(out, old.String(), new.String()), nil
+		return strings.ReplaceAll(out, old.String(), next.String()), nil
 	}
 }
 
@@ -429,7 +429,7 @@ func run() error {
 	// Get list of available versions
 	availableVersions := getAvailableVersions()
 	if len(availableVersions) == 0 {
-		logger.Error("failed to fetch avilable versions from update URL", "url", updatesURL)
+		logger.Error("failed to fetch available versions from update URL", "url", updatesURL)
 		return errors.New("failed to fetch available versions")
 	}
 
