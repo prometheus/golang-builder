@@ -27,6 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - run: make --always-make test-unit
 
   extract-macos-sdk:
@@ -66,6 +68,8 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Read .ci-versions.yml
         id: versions
         run: |
@@ -83,6 +87,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: prometheus/promci-setup@55bd31fe92710532260eb57c554f2697363285c5 # v0.2.2
         with:
           clean-runner-disk: true
@@ -114,6 +120,8 @@ jobs:
       (github.event_name == 'push' && github.event.ref == 'refs/heads/master')
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: prometheus/promci-artifacts/restore@9ca3252d07f230d5f923452b4df5697eba4a5bee # v0.1.1
       - name: Load images
         run: |
