@@ -1,8 +1,8 @@
 FROM        quay.io/prometheus/golang-builder:1.26-base
 LABEL       maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
-ENV ZIG_VERSION=0.14.0
-ENV ZIG_SHA256=473ec26806133cf4d1918caf1a410f8403a13d979726a9045b421b685031a982
+ENV ZIG_VERSION=0.17.0
+ENV ZIG_SHA256=1cbe9df9f27e6b78d14ccbca43b6703a404ef79ef1c463de901d7f088d4e2026
 ENV MACOS_SDK_PATH=/usr/local/lib/macos-sdk
 ENV RCODESIGN_VERSION=0.29.0
 ENV RCODESIGN_URL=https://github.com/indygreg/apple-platform-rs/releases/download/apple-codesign/${RCODESIGN_VERSION}/apple-codesign-${RCODESIGN_VERSION}-x86_64-unknown-linux-musl.tar.gz
@@ -28,7 +28,7 @@ RUN \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /usr/local/lib/zig \
     && tar -C /usr/local/lib/zig --strip-components=1 -xJf \
-       "$(/bin/download.sh "https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz" \
+       "$(/bin/download.sh "https://ziglang.org/download/${ZIG_VERSION}/zig-x86_64-linux-${ZIG_VERSION}.tar.xz" \
           "${ZIG_SHA256}")" \
     && ln -s /usr/local/lib/zig/zig /usr/local/bin/zig \
     && rcodesign_file=$(/bin/download.sh "${RCODESIGN_URL}" "${RCODESIGN_SHA256}") \
