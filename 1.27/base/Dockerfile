@@ -1,13 +1,13 @@
-FROM goreleaser/goreleaser:v2.13.3 AS goreleaser
+FROM goreleaser/goreleaser:v2.18.3 AS goreleaser
 
 FROM        debian:bookworm
 LABEL       maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
 COPY download.sh /bin/download.sh
 
-ENV YQ_VERSION=4.52.2
+ENV YQ_VERSION=4.54.1
 ENV YQ_URL=https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64
-ENV YQ_SUM=a74bd266990339e0c48a2103534aef692abf99f19390d12c2b0ce6830385c459
+ENV YQ_SUM=8e34fc298390875de416e6a4afcb8cabeceb25d9aa8506c1a2f9353cf702ea5f
 
 RUN \
     apt-get update \
@@ -61,9 +61,9 @@ RUN gotestsum_file=$(/bin/download.sh ${GOTESTSUM_URL} ${GOTESTSUM_SUM}) \
     && tar -C /usr/local -xzf ${gotestsum_file} gotestsum \
     && rm ${gotestsum_file}
 
-ENV PNPM_VERSION=11.3.0
+ENV PNPM_VERSION=12.14.0
 ENV PNPM_URL=https://github.com/pnpm/pnpm/releases/download/v${PNPM_VERSION}/pnpm-linux-x64.tar.gz
-ENV PNPM_SUM=6eb506b53297eb1186ba0cbff1577bb26d17713835a01a5342dcafae550827ce
+ENV PNPM_SUM=3910c3852136bed5bc1511b9137a45fd4357ed6b3970d9d08893641e9005867e
 
 RUN pnpm_file=$(/bin/download.sh ${PNPM_URL} ${PNPM_SUM}) \
     && mkdir -p /usr/local/lib/pnpm \
