@@ -24,6 +24,9 @@ do
   goos=${goarch%%/*}
   arch=${goarch##*/}
   goarm='' cc='gcc' cxx='g++' extra_args='' macos_path='' macos_target=''
+  if [[ "${arch}" =~ ^armv.*$ ]]; then
+    goarm="${arch##*v}"
+  fi
 
   case "${goos}" in
     windows)
@@ -44,7 +47,7 @@ do
       case "${arch}" in
         386) cc='i686-linux-gnu-gcc' cxx='i686-linux-gnu-g++' ;;
         arm64) cc='aarch64-linux-gnu-gcc' cxx='aarch64-linux-gnu-g++' ;;
-        armv*) goarm="${arch##*v}"
+        armv*)
           if [[ "${goarm}" == "7" ]]; then
             cc='arm-linux-gnueabihf-gcc' cxx='arm-linux-gnueabihf-g++'
           else
@@ -74,7 +77,7 @@ do
 
   echo "# Building with: CC='${cc}' CXX='${cxx}'"
   if [[ -n "${goarm}" ]]; then
-    PATH="${macos_path}${PATH}" MACOS_TARGET="${macos_target}" CC="${cc}" CXX="${cxx}" GOOS="${goos}" GOARCH="${arch}" GOARM="${goarm}" \
+    PATH="${macos_path}${PATH}" MACOS_TARGET="${macos_target}" CC="${cc}" CXX="${cxx}" GOOS="${goos}" GOARCH="arm" GOARM="${goarm}" \
       make PREFIX="${prefix}" build ${extra_args}
   else
     PATH="${macos_path}${PATH}" MACOS_TARGET="${macos_target}" CC="${cc}" CXX="${cxx}" GOOS="${goos}" GOARCH="${arch}" \
