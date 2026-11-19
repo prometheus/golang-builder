@@ -1,8 +1,8 @@
 FROM        quay.io/prometheus/golang-builder:1.27-base
 LABEL       maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
-ENV ZIG_VERSION=0.17.0
-ENV ZIG_SHA256=1cbe9df9f27e6b78d14ccbca43b6703a404ef79ef1c463de901d7f088d4e2026
+ENV ZIG_VERSION=0.17.1
+ENV ZIG_SHA256=3581863e3cbcfd0fce0efc682ce7e9e93da96668a977791d356a26d2a7e9b17a
 ENV MACOS_SDK_PATH=/usr/local/lib/macos-sdk
 ENV RCODESIGN_VERSION=0.29.0
 ENV RCODESIGN_URL=https://github.com/indygreg/apple-platform-rs/releases/download/apple-codesign/${RCODESIGN_VERSION}/apple-codesign-${RCODESIGN_VERSION}-x86_64-unknown-linux-musl.tar.gz
