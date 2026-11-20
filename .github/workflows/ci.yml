@@ -84,6 +84,8 @@ jobs:
     strategy:
       matrix:
         go: ${{ fromJSON(needs.go-versions.outputs.versions) }}
+    env:
+      VERSION: "${{ matrix.go }}"
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -96,14 +98,15 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
+          cache: false
           go-version: ${{ matrix.go }}.x
-      - run: make VARIANTS=base VERSION=${{ matrix.go }}
+      - run: make VARIANTS=base VERSION=${VERSION}
       - name: Download macOS SDK artifact
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: macos-sdk
           path: ${{ matrix.go }}/main/macos-sdk/
-      - run: make VARIANTS=main VERSION=${{ matrix.go }}
+      - run: make VARIANTS=main VERSION=${VERSION}
       - run: docker images
       - run: ls -l docker-images
       - uses: prometheus/promci-artifacts/save@9ca3252d07f230d5f923452b4df5697eba4a5bee # v0.1.1
